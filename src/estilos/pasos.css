@@ -1,0 +1,269 @@
+/* ---------- Columna central: cancha + línea de tiempo ---------- */
+.columna {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.boton-icono.primario,
+.boton-texto.primario {
+  background: var(--primario);
+  border-color: var(--primario);
+  color: #fff;
+}
+.boton-icono.peligro {
+  color: var(--peligro);
+}
+.boton-texto {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---------- Línea de tiempo ---------- */
+.linea-tiempo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  background: var(--superficie);
+  border-top: 1px solid var(--borde);
+  min-width: 0;
+}
+
+.controles-reproduccion,
+.lt-acciones {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.velocidad button {
+  min-width: 44px;
+  padding: 0 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.lt-miniaturas {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 3px 2px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.miniatura {
+  position: relative;
+  flex: 0 0 auto;
+  width: 104px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid var(--borde);
+  border-radius: 8px;
+  background: var(--fondo-cancha);
+  overflow: hidden;
+  scroll-snap-align: center;
+}
+.miniatura.activa {
+  border-color: var(--primario);
+  box-shadow: 0 0 0 2px var(--primario);
+}
+.miniatura-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.miniatura-num {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  min-width: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 18px;
+}
+.miniatura.activa .miniatura-num {
+  background: var(--primario);
+}
+.miniatura.agregar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 80px;
+  border-style: dashed;
+  background: var(--fondo);
+  color: var(--primario);
+  font-weight: 700;
+}
+.miniatura.agregar span {
+  font-size: 1.3rem;
+}
+
+/* ---------- Presentación ---------- */
+.presentacion {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: #0f2a14;
+  color: #fff;
+}
+
+.pres-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  padding-top: max(8px, env(safe-area-inset-top));
+}
+.pres-cabecera h1 {
+  flex: 1;
+  margin: 0;
+  font-size: clamp(1.1rem, 2.6vw, 1.8rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pres-paso {
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pres-cancha {
+  position: relative;
+  min-height: 0;
+  touch-action: pan-y;
+}
+.pres-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pres-controles {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+}
+.pres-controles .controles-reproduccion {
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.boton-pres {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 64px;
+  min-height: 64px;
+  padding: 0 20px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.boton-pres.primario {
+  background: #f2a900;
+  border-color: #f2a900;
+  color: #111;
+  min-width: 170px;
+}
+.boton-pres.solo-icono {
+  min-width: 52px;
+  min-height: 52px;
+  padding: 0;
+}
+.boton-pres:disabled {
+  opacity: 0.35;
+}
+.presentacion .velocidad {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.presentacion .velocidad button {
+  min-height: 64px;
+  min-width: 56px;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-size: 1.05rem;
+}
+.presentacion .velocidad button[aria-pressed='true'] {
+  background: #fff;
+  color: #111;
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 760px) {
+  .linea-tiempo {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px;
+  }
+  .lt-miniaturas {
+    order: 3;
+    flex-basis: 100%;
+  }
+  .controles-reproduccion {
+    flex: 1 1 auto;
+  }
+  .lt-acciones .boton-texto span {
+    display: none;
+  }
+  .lt-acciones .boton-texto {
+    padding: 0 10px;
+  }
+  .miniatura {
+    width: 88px;
+    height: 40px;
+  }
+  .boton-pres {
+    min-height: 56px;
+    padding: 0 14px;
+    font-size: 1rem;
+  }
+  .boton-pres span {
+    display: none;
+  }
+  .boton-pres.primario {
+    min-width: 96px;
+  }
+  .presentacion .velocidad button {
+    min-height: 56px;
+    min-width: 48px;
+  }
+}
+
+/* Celular acostado: aprovechar la altura para la cancha */
+@media (max-height: 500px) {
+  .pres-cabecera {
+    padding-block: 4px;
+  }
+  .pres-controles {
+    padding-block: 4px;
+  }
+  .boton-pres {
+    min-height: 48px;
+  }
+  .presentacion .velocidad button {
+    min-height: 48px;
+  }
+}

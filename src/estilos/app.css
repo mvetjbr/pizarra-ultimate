@@ -1,0 +1,486 @@
+:root {
+  --fondo: #f4f6f4;
+  --superficie: #ffffff;
+  --borde: #d0d7d2;
+  --texto: #1b211d;
+  --texto-suave: #4d5a52;
+  --primario: #1f6b2b;
+  --primario-claro: #e3f1e5;
+  --peligro: #b3261e;
+  --fondo-cancha: #22592a;
+  --radio: 10px;
+  --toque: 44px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--texto);
+  background: var(--fondo);
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  overscroll-behavior: none;
+}
+
+button,
+input,
+textarea,
+select,
+summary {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+:focus-visible {
+  outline: 3px solid #0b84d8;
+  outline-offset: 2px;
+}
+
+.cargando {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-size: 1.2rem;
+}
+
+/* ---------- Estructura ---------- */
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100dvh;
+}
+
+.cuerpo {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  min-height: 0;
+}
+
+.lienzo {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  background: var(--fondo-cancha);
+  overflow: hidden;
+}
+
+.pizarra {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.pizarra .elemento {
+  cursor: pointer;
+}
+.pizarra.herramienta-seleccionar .elemento {
+  cursor: grab;
+}
+.pizarra.herramienta-corte,
+.pizarra.herramienta-pase,
+.pizarra.herramienta-defensa,
+.pizarra.herramienta-zona,
+.pizarra.herramienta-texto {
+  cursor: crosshair;
+}
+.pizarra [data-tipo='manija'] {
+  cursor: move;
+}
+
+.etiqueta-jugador {
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-weight: 700;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  pointer-events: none;
+}
+
+.texto-cancha {
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-weight: 600;
+  fill: #ffffff;
+  stroke: rgba(0, 0, 0, 0.6);
+  stroke-width: 0.3px;
+  paint-order: stroke;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  pointer-events: none;
+}
+
+/* ---------- Barra superior ---------- */
+.barra-superior {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  padding-top: max(6px, env(safe-area-inset-top));
+  background: var(--superficie);
+  border-bottom: 1px solid var(--borde);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nombre-jugada {
+  flex: 1 1 160px;
+  min-width: 120px;
+  min-height: var(--toque);
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radio);
+  background: transparent;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.nombre-jugada:hover,
+.nombre-jugada:focus {
+  border-color: var(--borde);
+  background: var(--fondo);
+}
+
+.grupo {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.boton-icono {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--toque);
+  min-height: var(--toque);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  list-style: none;
+}
+.boton-icono::-webkit-details-marker {
+  display: none;
+}
+.boton-icono[aria-pressed='true'] {
+  background: var(--primario-claro);
+  border-color: var(--primario);
+  color: var(--primario);
+}
+.boton-icono.pequeno {
+  min-width: 36px;
+  min-height: 36px;
+  border: none;
+}
+
+.boton-texto {
+  min-height: var(--toque);
+  padding: 0 14px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.boton-texto.peligro,
+.menu-lista .peligro {
+  color: var(--peligro);
+}
+
+.segmentado {
+  display: inline-flex;
+  flex-shrink: 0;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+}
+.segmentado button {
+  min-height: var(--toque);
+  min-width: var(--toque);
+  padding: 0 12px;
+  border: none;
+  border-right: 1px solid var(--borde);
+  background: var(--superficie);
+  font-weight: 600;
+}
+.segmentado button:last-child {
+  border-right: none;
+}
+.segmentado button[aria-pressed='true'] {
+  background: var(--primario);
+  color: #fff;
+}
+
+.proporcion {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--primario-claro);
+  color: var(--primario);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.menu {
+  position: relative;
+  flex-shrink: 0;
+}
+.menu summary {
+  cursor: pointer;
+}
+.menu-lista {
+  position: fixed;
+  right: 10px;
+  top: 60px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 250px;
+  padding: 6px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.menu-lista > button,
+.menu-lista > label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: var(--toque);
+  padding: 0 10px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  text-align: left;
+}
+.menu-lista > button:hover:not(:disabled),
+.menu-lista > label:hover {
+  background: var(--fondo);
+}
+.menu-check {
+  justify-content: flex-start !important;
+}
+.menu-check input {
+  width: 20px;
+  height: 20px;
+}
+.menu-color input {
+  width: 44px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  background: none;
+}
+
+/* ---------- Herramientas ---------- */
+.herramientas {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 6px;
+  background: var(--superficie);
+  border-right: 1px solid var(--borde);
+  overflow-y: auto;
+}
+
+.boton-herramienta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 72px;
+  min-height: 56px;
+  padding: 4px;
+  border: 2px solid transparent;
+  border-radius: var(--radio);
+  background: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+.boton-herramienta:hover {
+  background: var(--fondo);
+}
+.boton-herramienta.activa {
+  background: var(--primario-claro);
+  border-color: var(--primario);
+  color: var(--primario);
+}
+.boton-herramienta.peligro.activa {
+  background: #fdecea;
+  border-color: var(--peligro);
+  color: var(--peligro);
+}
+
+/* ---------- Superposiciones sobre la cancha ---------- */
+.leyenda {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  max-width: calc(100% - 20px);
+  padding: 6px 10px;
+  border-radius: var(--radio);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+.leyenda > div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ayuda {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 20px);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--texto);
+  font-size: 0.85rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.panel {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 280px;
+  max-height: calc(100% - 20px);
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--superficie);
+  border-radius: var(--radio);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+.panel-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+.campo input,
+.campo textarea {
+  min-height: var(--toque);
+  padding: 8px 10px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--texto);
+  resize: vertical;
+}
+.campo .segmentado {
+  align-self: flex-start;
+}
+.nota {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+.colores {
+  display: flex;
+  gap: 6px;
+}
+.muestra {
+  width: var(--toque);
+  height: var(--toque);
+  border: 2px solid var(--borde);
+  border-radius: 50%;
+}
+.muestra[aria-pressed='true'] {
+  border: 3px solid var(--texto);
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 760px) {
+  .cuerpo {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+  .herramientas {
+    order: 2;
+    flex-direction: row;
+    padding: 4px;
+    padding-bottom: max(4px, env(safe-area-inset-bottom));
+    border-right: none;
+    border-top: 1px solid var(--borde);
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .boton-herramienta {
+    flex: 1 0 50px;
+    min-width: 50px;
+    padding: 2px;
+    font-size: 0.68rem;
+  }
+  .panel {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    width: auto;
+    max-height: 45%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 8px 12px;
+    padding: 8px 10px;
+  }
+  .panel-cabecera {
+    flex-basis: 100%;
+  }
+  .panel .campo {
+    flex: 1 1 auto;
+  }
+  .leyenda {
+    font-size: 0.72rem;
+    left: 6px;
+    bottom: 6px;
+  }
+  .ayuda {
+    font-size: 0.78rem;
+  }
+}
