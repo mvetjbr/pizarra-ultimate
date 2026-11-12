@@ -1,4 +1,4 @@
-import type { Match, Play, Player, Step } from './tipos';
+import type { Equipo, Match, Play, Player, Punto, Step } from './tipos';
 import { CANCHA } from './cancha';
 import { extremos, jugadorCercano, OFFSET_DISCO } from './geometria';
 
@@ -7,40 +7,59 @@ export function nuevoId(): string {
   return Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
 }
 
-const MATCH_INICIAL: Match[] = ['M', 'F', 'M', 'F', 'M', 'F', 'M'];
+/** Proporción de match en mixto: 4M-3F, 3M-4F o sin género (N). */
+export type Proporcion = 'M' | 'F' | 'N';
 
-/** Paso inicial: vertical stack atacando hacia la derecha, cada defensa marcando. */
-export function crearPasoInicial(): Step {
-  const y = CANCHA.ancho / 2;
-  const posAtaque = [
-    { x: 30, y },
-    { x: 40, y },
-    { x: 45, y },
-    { x: 50, y },
-    { x: 55, y },
-    { x: 60, y },
-    { x: 65, y },
-  ];
+/** Match de los jugadores 1 a 7, en orden, según la proporción. */
+export const PATRON_MATCH: Record<Proporcion, (Match | undefined)[]> = {
+  M: ['M', 'F', 'M', 'F', 'M', 'F', 'M'],
+  F: ['F', 'M', 'F', 'M', 'F', 'M', 'F'],
+  N: [undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+};
+
+export interface OpcionesJugada {
+  ataque: number;
+  defensa: number;
+  proporcion: Proporcion;
+}
+
+const OPCIONES_INICIALES: OpcionesJugada = { ataque: 7, defensa: 7, proporcion: 'M' };
+const Y = CANCHA.ancho / 2;
+/** Vertical stack: handler (1) y el stack (2 a 7) atacando hacia la derecha. */
+const POS_ATAQUE: Punto[] = [30, 40, 45, 50, 55, 60, 65].map((x) => ({ x, y: Y }));
+
+/**
+ * Posición inicial del jugador número `numero` (1 a 7) de cada equipo.
+ * La marca del handler va a un lado; las del stack, del lado contrario y hacia la zona.
+ */
+export function posicionBase(equipo: Equipo, numero: number): Punto {
+  const p = POS_ATAQUE[Math.min(Math.max(numero, 1), 7) - 1];
+  if (equipo === 'ataque') return { ...p };
+  return numero === 1 ? { x: p.x + 1.5, y: p.y - 2.2 } : { x: p.x + 1.8, y: p.y + 2.2 };
+}
+
+export function crearJugador(equipo: Equipo, numero: number, proporcion: Proporcion): Player {
+  return {
+    id: nuevoId(),
+    equipo,
+    etiqueta: String(numero),
+    match: PATRON_MATCH[proporcion][Math.min(numero, 7) - 1],
+    ...posicionBase(equipo, numero),
+  };
+}
+
+/** Paso inicial: vertical stack con la cantidad de jugadores y la proporción indicadas. */
+export function crearPasoInicial(opciones: OpcionesJugada = OPCIONES_INICIALES): Step {
   const jugadores: Player[] = [];
-  posAtaque.forEach((p, i) => {
-    jugadores.push({ id: nuevoId(), equipo: 'ataque', etiqueta: String(i + 1), match: MATCH_INICIAL[i], ...p });
-  });
-  posAtaque.forEach((p, i) => {
-    jugadores.push({
-      id: nuevoId(),
-      equipo: 'defensa',
-      etiqueta: String(i + 1),
-      match: MATCH_INICIAL[i],
-      // La marca del handler va a un lado; las del stack, del lado contrario y hacia la zona.
-      x: p.x + (i === 0 ? 1.5 : 1.8),
-      y: p.y + (i === 0 ? -2.2 : 2.2),
-    });
-  });
-  const handler = jugadores[0];
+  for (let i = 1; i <= opciones.ataque; i++) jugadores.push(crearJugador('ataque', i, opciones.proporcion));
+  for (let i = 1; i <= opciones.defensa; i++) jugadores.push(crearJugador('defensa', i, opciones.proporcion));
+  const handler = jugadores.find((j) => j.equipo === 'ataque');
   return {
     id: nuevoId(),
     jugadores,
-    disco: { x: handler.x + OFFSET_DISCO.x, y: handler.y + OFFSET_DISCO.y, poseedorId: handler.id },
+    disco: handler
+      ? { x: handler.x + OFFSET_DISCO.x, y: handler.y + OFFSET_DISCO.y, poseedorId: handler.id }
+      : { x: CANCHA.largo / 2, y: Y },
     flechas: [],
     zonas: [],
     textos: [],
@@ -84,7 +103,7 @@ export function crearPasoSiguiente(paso: Step): Step {
   return n;
 }
 
-export function crearJugada(nombre = 'Jugada nueva'): Play {
+export function crearJugada(nombre = 'Jugada nueva', opciones: OpcionesJugada = OPCIONES_INICIALES): Play {
   const ahora = Date.now();
   return {
     id: nuevoId(),
@@ -97,6 +116,6 @@ export function crearJugada(nombre = 'Jugada nueva'): Play {
     vista: 'completa',
     lado: 'derecha',
     orientacion: 'horizontal',
-    pasos: [crearPasoInicial()],
+    pasos: [crearPasoInicial(opciones)],
   };
 }

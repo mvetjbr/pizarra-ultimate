@@ -412,3 +412,14 @@ button.proporcion {
   margin-top: 10px;
   accent-color: var(--primario);
 }
+/* ---------- Jugadores en cancha ---------- */
+.segmentado.numeros {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  align-self: stretch;
+}
+.segmentado.numeros button {
+  min-width: 0;
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+}

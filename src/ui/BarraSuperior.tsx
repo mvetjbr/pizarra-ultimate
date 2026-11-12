@@ -20,6 +20,8 @@ import { Biblioteca } from './Biblioteca';
 import { DetallesJugada } from './DetallesJugada';
 import { Compartir } from './Compartir';
 import { Roster } from './Roster';
+import { Jugadores } from './Jugadores';
+import { proporcionValida } from '../estado/jugadores';
 
 const VISTAS: { id: Vista; nombre: string }[] = [
   { id: 'completa', nombre: 'Completa' },
@@ -32,7 +34,7 @@ export function BarraSuperior() {
   const paso = useEditor(pasoActivo);
   const puedeDeshacer = useEditor((s) => s.pasado.length > 0);
   const puedeRehacer = useEditor((s) => s.futuro.length > 0);
-  const { deshacer, rehacer, cambiar, agregarJugador } = useEditor.getState();
+  const { deshacer, rehacer, cambiar } = useEditor.getState();
   const prefs = usePreferencias();
   const ventana = useVentana((s) => s.ventana);
   const cerrar = useVentana((s) => s.cerrar);
@@ -44,8 +46,8 @@ export function BarraSuperior() {
   const defensa = paso.jugadores.filter((j) => j.equipo === 'defensa');
   const m = ataque.filter((j) => j.match === 'M').length;
   const f = ataque.filter((j) => j.match === 'F').length;
-  // En mixto la línea debe ser 4-3 (en cualquiera de los dos sentidos).
-  const proporcionRara = m + f === 7 && Math.abs(m - f) !== 1;
+  // En mixto la línea debe ser 4-3; con menos jugadores o sin género, ningún match pasa de 4.
+  const proporcionRara = !proporcionValida(m, f, ataque.length - m - f);
 
   const cerrarMenu = () => menu.current?.removeAttribute('open');
   const abrir = (v: Ventana) => {
@@ -151,7 +153,9 @@ export function BarraSuperior() {
         }
         onClick={() => abrir('roster')}
       >
-        {m}M-{f}F
+        {ataque.length > 0 && m + f === 0
+          ? 'Sin género'
+          : `${m}M-${f}F${ataque.length - m - f > 0 ? ` · ${ataque.length - m - f} s/g` : ''}`}
       </button>
 
       <button className="boton-texto primario" onClick={() => abrir('compartir')} title="Compartir y exportar">
@@ -175,23 +179,8 @@ export function BarraSuperior() {
             Nueva jugada en blanco
           </button>
           <hr />
-          <button
-            disabled={ataque.length >= 7}
-            onClick={() => {
-              agregarJugador('ataque');
-              cerrarMenu();
-            }}
-          >
-            Agregar jugador de ataque ({ataque.length}/7)
-          </button>
-          <button
-            disabled={defensa.length >= 7}
-            onClick={() => {
-              agregarJugador('defensa');
-              cerrarMenu();
-            }}
-          >
-            Agregar defensor ({defensa.length}/7)
+          <button onClick={() => abrir('jugadores')}>
+            Jugadores y proporción… ({ataque.length} vs {defensa.length})
           </button>
           <hr />
           <label className="menu-check">
@@ -248,6 +237,7 @@ export function BarraSuperior() {
       {ventana === 'detalles' && <DetallesJugada alCerrar={cerrar} />}
       {ventana === 'compartir' && <Compartir alCerrar={cerrar} />}
       {ventana === 'roster' && <Roster alCerrar={cerrar} />}
+      {ventana === 'jugadores' && <Jugadores alCerrar={cerrar} />}
     </header>
   );
 }
