@@ -21,6 +21,7 @@ import { DetallesJugada } from './DetallesJugada';
 import { Compartir } from './Compartir';
 import { Roster } from './Roster';
 import { Jugadores } from './Jugadores';
+import { AjustesConteo } from '../conteo/AjustesConteo';
 import { proporcionValida } from '../estado/jugadores';
 
 const VISTAS: { id: Vista; nombre: string }[] = [
@@ -179,6 +180,7 @@ export function BarraSuperior() {
             Nueva jugada en blanco
           </button>
           <hr />
+          <button onClick={() => abrir('conteo')}>Conteo de 10…</button>
           <button onClick={() => abrir('jugadores')}>
             Jugadores y proporción… ({ataque.length} vs {defensa.length})
           </button>
@@ -238,6 +240,7 @@ export function BarraSuperior() {
       {ventana === 'compartir' && <Compartir alCerrar={cerrar} />}
       {ventana === 'roster' && <Roster alCerrar={cerrar} />}
       {ventana === 'jugadores' && <Jugadores alCerrar={cerrar} />}
+      {ventana === 'conteo' && <AjustesConteo alCerrar={cerrar} />}
     </header>
   );
 }

@@ -13,6 +13,7 @@ import { interpolar } from '../animacion/interpolar';
 import { CanchaEstatica } from '../cancha/CanchaEstatica';
 import { ControlesReproduccion } from './LineaTiempo';
 import { Leyenda } from './Leyenda';
+import { Conteo } from '../conteo/Conteo';
 import { IconoCerrar, IconoNotas, IconoRotar } from './Iconos';
 
 function useRetrato() {
@@ -143,6 +144,7 @@ export function ModoPresentacion() {
           className="pres-svg"
         />
         <Leyenda />
+        <Conteo />
         {verNotas && (
           <div className="pres-notas" onPointerDown={(e) => e.stopPropagation()}>
             <h2>Notas del entrenador</h2>

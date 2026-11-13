@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type Ventana = 'biblioteca' | 'detalles' | 'compartir' | 'roster' | 'jugadores' | null;
+export type Ventana = 'biblioteca' | 'detalles' | 'compartir' | 'roster' | 'jugadores' | 'conteo' | null;
 
 /** Qué ventana (diálogo) está abierta; así cualquier parte de la interfaz puede abrir una. */
 export const useVentana = create<{ ventana: Ventana; abrir: (v: Ventana) => void; cerrar: () => void }>((set) => ({

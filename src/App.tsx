@@ -9,6 +9,7 @@ import { Ayuda, Leyenda } from './ui/Leyenda';
 import { LineaTiempo } from './ui/LineaTiempo';
 import { ModoPresentacion } from './ui/ModoPresentacion';
 import { Aviso } from './ui/Aviso';
+import { Conteo } from './conteo/Conteo';
 
 const ATAJOS: Record<string, Herramienta> = {
   v: 'seleccionar',
@@ -80,6 +81,7 @@ export default function App() {
           <main className="lienzo">
             <Pizarra />
             <Leyenda />
+            <Conteo />
             <Ayuda />
             <PanelPropiedades />
           </main>

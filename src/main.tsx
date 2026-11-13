@@ -6,6 +6,7 @@ import './estado/instalacion';
 import './estilos/app.css';
 import './estilos/pasos.css';
 import './estilos/biblioteca.css';
+import './estilos/conteo.css';
 
 iniciarPersistencia();
 
