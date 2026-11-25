@@ -1,0 +1,14 @@
+# Configuración mínima de Supabase CLI para Pizarra Ultimate.
+# Proyecto en la nube: dvdixliuqziremlythxv (se pasa con --project-ref al desplegar).
+project_id = "pizarra-ultimate"
+
+# Las claves nuevas (sb_publishable_…) no son JWT: la verificación de sesión
+# la hace cada función por dentro (usuarioDe en _compartido/servidor.ts).
+[functions.registro]
+verify_jwt = false
+
+[functions.aceptar]
+verify_jwt = false
+
+[functions.eliminar-cuenta]
+verify_jwt = false

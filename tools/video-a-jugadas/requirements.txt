@@ -1,0 +1,10 @@
+# PyTorch solo CPU (sin CUDA): instalar primero desde el índice de PyTorch
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+ultralytics
+yt-dlp
+opencv-python
+numpy
+scenedetect
+scipy
+imageio-ffmpeg
+lap

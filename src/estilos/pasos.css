@@ -10,7 +10,7 @@
 .boton-texto.primario {
   background: var(--primario);
   border-color: var(--primario);
-  color: #fff;
+  color: var(--sobre-primario);
 }
 .boton-icono.peligro {
   color: var(--peligro);
@@ -38,6 +38,11 @@
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
+}
+
+.lt-mover {
+  display: flex;
+  gap: 4px;
 }
 
 .velocidad button {
@@ -86,8 +91,8 @@
   min-width: 18px;
   padding: 0 4px;
   border-radius: 9px;
-  background: rgba(0, 0, 0, 0.7);
-  color: #fff;
+  background: var(--capa);
+  color: var(--sobre-capa);
   font-size: 0.72rem;
   font-weight: 700;
   line-height: 18px;
@@ -117,8 +122,8 @@
   z-index: 50;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  background: #0f2a14;
-  color: #fff;
+  background: var(--capa);
+  color: var(--sobre-capa);
 }
 
 .pres-cabecera {
@@ -174,17 +179,17 @@
   min-width: 64px;
   min-height: 64px;
   padding: 0 20px;
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  border: 2px solid var(--sobre-capa);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: transparent;
+  color: var(--sobre-capa);
   font-size: 1.15rem;
   font-weight: 700;
 }
 .boton-pres.primario {
-  background: #f2a900;
-  border-color: #f2a900;
-  color: #111;
+  background: var(--resalte);
+  border-color: var(--resalte);
+  color: var(--sobre-resalte);
   min-width: 170px;
 }
 .boton-pres.solo-icono {
@@ -196,34 +201,51 @@
   opacity: 0.35;
 }
 .presentacion .velocidad {
-  border-color: rgba(255, 255, 255, 0.35);
+  border-color: var(--sobre-capa);
 }
 .presentacion .velocidad button {
   min-height: 64px;
   min-width: 56px;
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.35);
-  color: #fff;
+  background: transparent;
+  border-color: var(--sobre-capa);
+  color: var(--sobre-capa);
   font-size: 1.05rem;
 }
 .presentacion .velocidad button[aria-pressed='true'] {
-  background: #fff;
-  color: #111;
+  background: var(--sobre-capa);
+  color: var(--capa);
 }
 
 /* ---------- Celular ---------- */
 @media (max-width: 760px) {
+  /*
+   * Dos filas en vez de tres:
+   * 1) anterior · reproducir · siguiente · velocidad | duplicar · borrar · presentar
+   * 2) miniaturas de los pasos · + Paso | mover paso ← →
+   */
   .linea-tiempo {
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 6px 4px;
     padding: 6px;
   }
-  .lt-miniaturas {
-    order: 3;
-    flex-basis: 100%;
+  .lt-acciones {
+    display: contents;
   }
   .controles-reproduccion {
+    order: 1;
     flex: 1 1 auto;
+  }
+  .linea-tiempo .velocidad {
+    display: none;
+  }
+  .linea-tiempo .velocidad-ciclo {
+    display: inline-grid !important;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .lt-acciones > .boton-icono,
+  .lt-acciones > .boton-texto {
+    order: 1;
   }
   .lt-acciones .boton-texto span {
     display: none;
@@ -231,9 +253,16 @@
   .lt-acciones .boton-texto {
     padding: 0 10px;
   }
+  .lt-miniaturas {
+    order: 2;
+    flex: 1 1 200px;
+  }
+  .lt-mover {
+    order: 3;
+  }
   .miniatura {
     width: 88px;
-    height: 40px;
+    height: 44px;
   }
   .boton-pres {
     min-height: 56px;

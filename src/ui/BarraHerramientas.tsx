@@ -55,10 +55,12 @@ export function BarraHerramientas() {
           className={`boton-herramienta${actual === h.id ? ' activa' : ''}${h.id === 'borrar' ? ' peligro' : ''}`}
           aria-pressed={actual === h.id}
           title={`${h.nombre} (${h.atajo})`}
+          aria-label={`${h.nombre} (${h.atajo})`}
           onClick={() => setHerramienta(h.id)}
         >
           {h.icono}
-          <span>{h.nombre}</span>
+          <span className={h.id === 'seleccionar' ? 'nombre-largo' : undefined}>{h.nombre}</span>
+          {h.id === 'seleccionar' && <span className="nombre-corto">Mover</span>}
         </button>
       ))}
     </nav>

@@ -3,6 +3,7 @@ import { regionVista, rotacionTexto, transformacion } from '../modelo/cancha';
 import { usePreferencias } from '../estado/preferencias';
 import { nombreCorto, nombreDeJugador, useRoster, type MiembroRoster } from '../estado/rosterStore';
 import { Cancha } from './Cancha';
+import { useTema, type Tema } from '../temas';
 import { CapaElementos } from './CapaElementos';
 
 export interface PropsDibujo {
@@ -10,8 +11,8 @@ export interface PropsDibujo {
   vista: Vista;
   lado: Lado;
   orientacion: Orientacion;
-  colorAtaque: string;
-  colorDefensa: string;
+  /** Tema con que se dibuja (se pasa explícito para que las exportaciones salgan con sus colores). */
+  tema: Tema;
   mostrarMatch: boolean;
   opacidadFlechas?: number;
   className?: string;
@@ -39,16 +40,15 @@ export function DibujoCancha(p: PropsDibujo) {
       {p.autonomo && (
         <>
           <style>{ESTILOS_AUTONOMOS}</style>
-          <rect x={r.x} y={r.y} width={r.w} height={r.h} fill="#22592a" />
+          <rect x={r.x} y={r.y} width={r.w} height={r.h} fill={p.tema.cancha.fondo} />
         </>
       )}
       <g transform={transformacion(p.orientacion)}>
-        <Cancha cuadricula={false} />
+        <Cancha cuadricula={false} tema={p.tema} />
         <CapaElementos
           paso={p.paso}
           rot={rotacionTexto(p.orientacion)}
-          colorAtaque={p.colorAtaque}
-          colorDefensa={p.colorDefensa}
+          tema={p.tema}
           mostrarMatch={p.mostrarMatch}
           opacidadFlechas={p.opacidadFlechas}
           nombreDe={p.nombreDe}
@@ -58,7 +58,7 @@ export function DibujoCancha(p: PropsDibujo) {
   );
 }
 
-type PropsEstatica = Omit<PropsDibujo, 'colorAtaque' | 'colorDefensa' | 'mostrarMatch' | 'autonomo' | 'nombreDe'> & {
+type PropsEstatica = Omit<PropsDibujo, 'tema' | 'mostrarMatch' | 'autonomo' | 'nombreDe'> & {
   /** Las miniaturas no muestran nombres (no se leerían). */
   sinNombres?: boolean;
 };
@@ -76,11 +76,11 @@ export function crearNombreDe(mostrar: boolean, miembros: MiembroRoster[]) {
 export function CanchaEstatica({ sinNombres, ...props }: PropsEstatica) {
   const prefs = usePreferencias();
   const miembros = useRoster((s) => s.miembros);
+  const tema = useTema((s) => s.tema);
   return (
     <DibujoCancha
       {...props}
-      colorAtaque={prefs.colorAtaque}
-      colorDefensa={prefs.colorDefensa}
+      tema={tema}
       mostrarMatch={prefs.mostrarMatch}
       nombreDe={crearNombreDe(prefs.mostrarNombres && !sinNombres, miembros)}
     />

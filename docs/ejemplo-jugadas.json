@@ -1,0 +1,62 @@
+{
+  "formato": "pizarra-ultimate",
+  "version": 1,
+  "jugadas": [
+    {
+      "id": "video-001",
+      "nombre": "Vertical stack: corte en L y pase de break",
+      "categoria": "Ataque",
+      "etiquetas": ["vertical", "video Nacionales 2025"],
+      "notas": "Minuto 12:40 del video. El 3 corta hacia afuera y recibe el break.",
+      "creada": 1764000000000,
+      "editada": 1764000000000,
+      "vista": "completa",
+      "lado": "derecha",
+      "orientacion": "horizontal",
+      "pasos": [
+        {
+          "id": "p1",
+          "jugadores": [
+            { "id": "a1", "equipo": "ataque", "etiqueta": "1", "match": "M", "x": 30, "y": 18.5 },
+            { "id": "a2", "equipo": "ataque", "etiqueta": "2", "match": "F", "x": 40, "y": 18.5 },
+            { "id": "a3", "equipo": "ataque", "etiqueta": "3", "match": "M", "x": 45, "y": 18.5 },
+            { "id": "d1", "equipo": "defensa", "etiqueta": "1", "match": "M", "x": 31.5, "y": 15.1 },
+            { "id": "d2", "equipo": "defensa", "etiqueta": "2", "match": "F", "x": 41.8, "y": 21.9 },
+            { "id": "d3", "equipo": "defensa", "etiqueta": "3", "match": "M", "x": 46.8, "y": 21.9 }
+          ],
+          "disco": { "x": 30.95, "y": 17.55, "poseedorId": "a1" },
+          "flechas": [
+            { "id": "f1", "tipo": "corte", "desde": { "x": 45, "y": 18.5 }, "hasta": { "x": 38, "y": 30 }, "desdeId": "a3" },
+            {
+              "id": "f2",
+              "tipo": "pase",
+              "desde": { "x": 30, "y": 18.5 },
+              "hasta": { "x": 38, "y": 30 },
+              "desdeId": "a1",
+              "curva": true,
+              "control": { "x": 28, "y": 30 }
+            },
+            { "id": "f3", "tipo": "defensa", "desde": { "x": 46.8, "y": 21.9 }, "hasta": { "x": 40, "y": 27 }, "desdeId": "d3" }
+          ],
+          "zonas": [],
+          "textos": [{ "id": "t1", "texto": "Break por afuera", "x": 34, "y": 33 }]
+        },
+        {
+          "id": "p2",
+          "jugadores": [
+            { "id": "a1", "equipo": "ataque", "etiqueta": "1", "match": "M", "x": 30, "y": 18.5 },
+            { "id": "a2", "equipo": "ataque", "etiqueta": "2", "match": "F", "x": 40, "y": 18.5 },
+            { "id": "a3", "equipo": "ataque", "etiqueta": "3", "match": "M", "x": 38, "y": 30 },
+            { "id": "d1", "equipo": "defensa", "etiqueta": "1", "match": "M", "x": 31.5, "y": 15.1 },
+            { "id": "d2", "equipo": "defensa", "etiqueta": "2", "match": "F", "x": 41.8, "y": 21.9 },
+            { "id": "d3", "equipo": "defensa", "etiqueta": "3", "match": "M", "x": 40, "y": 27 }
+          ],
+          "disco": { "x": 38.95, "y": 29.05, "poseedorId": "a3" },
+          "flechas": [],
+          "zonas": [],
+          "textos": []
+        }
+      ]
+    }
+  ]
+}

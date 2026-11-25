@@ -46,7 +46,9 @@ const Miniatura = memo(function Miniatura({
       aria-current={activa ? 'step' : undefined}
     >
       <CanchaEstatica paso={paso} vista={vista} lado={lado} orientacion="horizontal" className="miniatura-svg" sinNombres />
-      <span className="miniatura-num">{numero}</span>
+      <span className="miniatura-num" data-num2={String(numero).padStart(2, '0')}>
+        {numero}
+      </span>
     </button>
   );
 });
@@ -87,6 +89,17 @@ export function ControlesReproduccion({ grande = false }: { grande?: boolean }) 
           </button>
         ))}
       </div>
+      {!grande && (
+        // En el celular la velocidad es un solo botón que va pasando 0.5x → 1x → 2x.
+        <button
+          className="boton-icono velocidad-ciclo"
+          onClick={() => setVelocidad(VELOCIDADES[(VELOCIDADES.indexOf(velocidad) + 1) % VELOCIDADES.length])}
+          aria-label={`Velocidad ${velocidad}x. Toca para cambiarla`}
+          title="Velocidad"
+        >
+          {velocidad}x
+        </button>
+      )}
     </div>
   );
 }
@@ -135,6 +148,7 @@ export function LineaTiempo() {
         <button className="boton-icono" onClick={accion(st.duplicarPasoActual)} title="Duplicar paso" aria-label="Duplicar paso">
           <IconoDuplicar />
         </button>
+        <div className="lt-mover">
         <button
           className="boton-icono"
           onClick={accion(() => st.moverPaso(activo, -1))}
@@ -153,6 +167,7 @@ export function LineaTiempo() {
         >
           <IconoDerecha />
         </button>
+        </div>
         <button
           className="boton-icono peligro"
           onClick={accion(() => st.eliminarPaso(activo))}

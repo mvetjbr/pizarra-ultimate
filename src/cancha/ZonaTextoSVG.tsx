@@ -1,11 +1,10 @@
 import type { Label, Zone } from '../modelo/tipos';
-import { COLORES } from '../estilos/colores';
 
-export function ZonaSVG({ z, rot, seleccionada }: { z: Zone; rot?: string; seleccionada: boolean }) {
+export function ZonaSVG({ z, rot, seleccionada, colorSeleccion }: { z: Zone; rot?: string; seleccionada: boolean; colorSeleccion: string }) {
   const comun = {
     fill: z.color,
     fillOpacity: 0.28,
-    stroke: seleccionada ? COLORES.seleccion : z.color,
+    stroke: seleccionada ? colorSeleccion : z.color,
     strokeWidth: seleccionada ? 0.3 : 0.18,
     strokeDasharray: seleccionada ? undefined : '0.7 0.4',
   };
@@ -31,7 +30,19 @@ export function ZonaSVG({ z, rot, seleccionada }: { z: Zone; rot?: string; selec
 
 const TAM_TEXTO = 1.3;
 
-export function TextoSVG({ t, rot, seleccionado, interactivo }: { t: Label; rot?: string; seleccionado: boolean; interactivo: boolean }) {
+export function TextoSVG({
+  t,
+  rot,
+  seleccionado,
+  interactivo,
+  colorSeleccion,
+}: {
+  t: Label;
+  rot?: string;
+  seleccionado: boolean;
+  interactivo: boolean;
+  colorSeleccion: string;
+}) {
   const lineas = (t.texto || ' ').split('\n');
   const maxLargo = Math.max(...lineas.map((l) => l.length), 2);
   const ancho = maxLargo * TAM_TEXTO * 0.6 + 1;
@@ -47,7 +58,7 @@ export function TextoSVG({ t, rot, seleccionado, interactivo }: { t: Label; rot?
             height={alto}
             rx={0.4}
             fill="transparent"
-            stroke={seleccionado ? COLORES.seleccion : 'none'}
+            stroke={seleccionado ? colorSeleccion : 'none'}
             strokeWidth={0.2}
           />
         )}

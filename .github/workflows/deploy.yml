@@ -24,9 +24,15 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      # No se publica con textos legales incompletos (marcadores [ASI] sin llenar).
+      - run: node scripts/legal.mjs verificar
       - run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
+          # Datos públicos del proyecto Supabase (Settings → Secrets and variables → Actions → Variables).
+          # Si no existen, la app se publica sin cuentas (solo en el dispositivo).
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

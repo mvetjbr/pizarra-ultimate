@@ -1,9 +1,9 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { Match, Play, Step, TipoFlecha } from '../modelo/tipos';
 import { OFFSET_DISCO, posDisco } from '../modelo/geometria';
 import { pasoActivo, useEditor } from '../estado/editorStore';
 import { COLORES_ZONA } from '../estilos/colores';
-import { IconoCerrar } from './Iconos';
+import { IconoBorrar, IconoCerrar } from './Iconos';
 import { useRoster } from '../estado/rosterStore';
 import { useVentana } from '../estado/ventanas';
 import { cambiarJugadorEnTodos, datosDeMiembro } from './Roster';
@@ -79,6 +79,9 @@ export function PanelPropiedades() {
   const formaZona = useEditor((s) => s.formaZona);
   const { cambiar, eliminar, seleccionar, setFormaZona } = useEditor.getState();
   const miembros = useRoster((s) => s.miembros);
+  // Jugadores y flechas: burbuja pequeña; el panel completo solo si se pide con «⋯».
+  const [expandido, setExpandido] = useState<string | null>(null);
+  const claveSel = sel ? `${sel.tipo}:${sel.id}` : null;
 
   // Sin selección: opciones de la herramienta de zona.
   if (!sel) {
@@ -95,6 +98,37 @@ export function PanelPropiedades() {
           alElegir={setFormaZona}
         />
       </aside>
+    );
+  }
+
+  // El disco no necesita panel: se arrastra hasta un jugador para dárselo.
+  if (sel.tipo === 'disco') return null;
+
+  if ((sel.tipo === 'jugador' || sel.tipo === 'flecha') && expandido !== claveSel) {
+    const f = sel.tipo === 'flecha' ? paso.flechas.find((x) => x.id === sel.id) : undefined;
+    return (
+      <div className="burbuja-seleccion" role="toolbar" aria-label="Acciones del elemento seleccionado">
+        {f?.tipo === 'pase' && (
+          <button
+            aria-pressed={!!f.curva}
+            title={f.curva ? 'Pase en curva (toca para hacerlo recto)' : 'Hacer el pase en curva'}
+            onClick={() =>
+              cambiar((_, p) => {
+                const x = p.flechas.find((y) => y.id === sel.id);
+                if (x) x.curva = !x.curva;
+              })
+            }
+          >
+            ⤴ Curva
+          </button>
+        )}
+        <button className="borrar" onClick={() => eliminar(sel)} title="Eliminar" aria-label="Eliminar">
+          <IconoBorrar />
+        </button>
+        <button onClick={() => setExpandido(claveSel)} title="Más opciones" aria-label="Más opciones">
+          ⋯
+        </button>
+      </div>
     );
   }
 
@@ -169,16 +203,6 @@ export function PanelPropiedades() {
         </button>
       </>
     );
-  } else if (sel.tipo === 'disco') {
-    titulo = 'Disco';
-    const poseedor = paso.jugadores.find((x) => x.id === paso.disco.poseedorId);
-    contenido = (
-      <p className="nota">
-        {poseedor
-          ? `Lo tiene el jugador ${poseedor.etiqueta} (${poseedor.equipo}). Arrástralo para soltarlo.`
-          : 'Disco libre. Suéltalo encima de un jugador para asignárselo.'}
-      </p>
-    );
   } else if (sel.tipo === 'flecha') {
     const f = paso.flechas.find((x) => x.id === sel.id);
     if (!f) return null;
@@ -216,7 +240,7 @@ export function PanelPropiedades() {
             }
           />
         )}
-        {f.tipo === 'pase' && f.curva && <p className="nota">Arrastra el punto celeste para curvar el pase (IO, OI, hammer).</p>}
+        {f.tipo === 'pase' && f.curva && <p className="nota">Arrastra el punto celeste: el disco pasará justo por donde lo dejes (IO, OI, hammer).</p>}
       </>
     );
   } else if (sel.tipo === 'zona') {
@@ -297,11 +321,9 @@ export function PanelPropiedades() {
         </button>
       </div>
       {contenido}
-      {sel.tipo !== 'disco' && (
-        <button className="boton-texto peligro" onClick={() => eliminar(sel)}>
-          Eliminar
-        </button>
-      )}
+      <button className="boton-texto peligro" onClick={() => eliminar(sel)}>
+        Eliminar
+      </button>
     </aside>
   );
 }

@@ -83,4 +83,6 @@ export interface Play {
   lado: Lado;
   orientacion: Orientacion;
   pasos: Step[];
+  /** Carpeta de la biblioteca donde está guardada (sin carpeta si no tiene). */
+  carpeta?: string;
 }

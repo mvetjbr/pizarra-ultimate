@@ -1,14 +1,7 @@
+// Los colores de la cancha, los jugadores y las flechas los pone el tema activo (src/temas).
+// Aquí quedan solo los que son iguales en todos los temas: la insignia de match y los colores
+// que la persona elige para sus zonas (son datos de la jugada, no apariencia).
 export const COLORES = {
-  cesped: '#2F7D3A',
-  zonaAnotacion: '#276B31',
-  lineas: '#FFFFFF',
-  ataque: '#F2A900',
-  defensa: '#1E4FD8',
-  disco: '#FFFFFF',
-  bordeDisco: '#8A8A8A',
-  pase: '#FFFFFF',
-  movDefensa: '#FF5A5A',
-  seleccion: '#00E5FF',
   matchM: '#5B2A86',
   matchF: '#C2185B',
 } as const;

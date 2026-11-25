@@ -1,0 +1,5 @@
+# Los textos legales se guardan siempre con saltos de línea LF:
+# su SHA-256 es la prueba de qué texto exacto aceptó cada persona.
+legal/**/*.md text eol=lf
+legal/**/*.json text eol=lf
+supabase/**/*.sql text eol=lf

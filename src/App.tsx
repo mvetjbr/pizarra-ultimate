@@ -10,6 +10,43 @@ import { LineaTiempo } from './ui/LineaTiempo';
 import { ModoPresentacion } from './ui/ModoPresentacion';
 import { Aviso } from './ui/Aviso';
 import { Conteo } from './conteo/Conteo';
+import { useRuta } from './estado/ruta';
+import { useSesion } from './nube/sesion';
+import { PantallaLegal } from './ui/cuenta/PantallaLegal';
+import { Cuenta, NuevaContrasena } from './ui/cuenta/Cuenta';
+import { MisDatos } from './ui/cuenta/MisDatos';
+import { ReAceptar } from './ui/cuenta/ReAceptar';
+import { Admin } from './ui/cuenta/Admin';
+import { AbrirEnlace, BannerCompartida, useEnlacePendiente } from './ui/AbrirEnlace';
+import { decidirSubida, useNube } from './nube/jugadas';
+import { Dialogo } from './ui/Dialogo';
+
+/** Primera vez con cuenta en este dispositivo: ¿subir las jugadas que ya había? */
+function PreguntaSubir() {
+  const n = useNube((s) => s.porSubir);
+  if (!n) return null;
+  return (
+    <Dialogo
+      titulo="Guardar tus jugadas en tu cuenta"
+      alCerrar={() => void decidirSubida(false)}
+      pie={
+        <>
+          <button className="boton-texto primario" onClick={() => void decidirSubida(true)}>
+            Sí, guardarlas en mi cuenta
+          </button>
+          <button className="boton-texto" onClick={() => void decidirSubida(false)}>
+            No, dejarlas solo aquí
+          </button>
+        </>
+      }
+    >
+      <p>
+        Este dispositivo tiene {n} {n === 1 ? 'jugada guardada' : 'jugadas guardadas'} sin cuenta. Si las guardas en tu cuenta,
+        las verás en tus otros dispositivos y podrás compartirlas.
+      </p>
+    </Dialogo>
+  );
+}
 
 const ATAJOS: Record<string, Herramienta> = {
   v: 'seleccionar',
@@ -29,6 +66,7 @@ function useAtajosTeclado() {
       const st = useEditor.getState();
       if (st.presentando) return; // la presentación tiene sus propios atajos
       if (document.querySelector('.fondo-dialogo')) return; // hay una ventana abierta
+      if (/^#\/(legal|cuenta|mis-datos)/.test(location.hash)) return; // páginas fuera del editor
       const mod = e.ctrlKey || e.metaKey;
       const k = e.key.toLowerCase();
       if (mod && k === 'z' && !e.shiftKey) {
@@ -63,7 +101,50 @@ function useAtajosTeclado() {
 export default function App() {
   const cargado = useEditor((s) => s.cargado);
   const presentando = useEditor((s) => s.presentando);
+  const ruta = useRuta();
+  const recuperando = useSesion((s) => s.recuperandoContrasena);
+  const debeAceptar = useSesion((s) => !!s.usuario && s.pendientes.length > 0);
   useAtajosTeclado();
+  useEnlacePendiente();
+
+  // Las páginas legales son públicas: se muestran aunque la app aún esté cargando datos.
+  if (ruta.pantalla === 'legal') return <PantallaLegal tipo={ruta.tipo} version={ruta.version} />;
+  if (recuperando)
+    return (
+      <>
+        <NuevaContrasena />
+        <Aviso />
+      </>
+    );
+  if (ruta.pantalla === 'cuenta')
+    return (
+      <>
+        <Cuenta modo={ruta.modo} />
+        <Aviso />
+      </>
+    );
+  if (ruta.pantalla === 'admin')
+    return (
+      <>
+        <Admin />
+        <Aviso />
+      </>
+    );
+  if (ruta.pantalla === 'enlace')
+    return (
+      <>
+        <AbrirEnlace token={ruta.token} />
+        <Aviso />
+      </>
+    );
+  if (ruta.pantalla === 'mis-datos')
+    return (
+      <>
+        <MisDatos />
+        {debeAceptar && <ReAceptar />}
+        <Aviso />
+      </>
+    );
   if (!cargado) return <div className="cargando">Cargando…</div>;
   if (presentando)
     return (
@@ -78,9 +159,10 @@ export default function App() {
       <div className="cuerpo">
         <BarraHerramientas />
         <div className="columna">
+          <BannerCompartida />
           <main className="lienzo">
             <Pizarra />
-            <Leyenda />
+            <Leyenda plegable />
             <Conteo />
             <Ayuda />
             <PanelPropiedades />
@@ -88,6 +170,7 @@ export default function App() {
           <LineaTiempo />
         </div>
       </div>
+      {debeAceptar ? <ReAceptar /> : <PreguntaSubir />}
       <Aviso />
     </div>
   );

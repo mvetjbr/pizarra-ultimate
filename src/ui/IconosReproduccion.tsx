@@ -8,11 +8,13 @@ function Icono({ children, tam = 24 }: { children: ReactNode; tam?: number }) {
       height={tam}
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
+      className="icono"
     >
+      <circle className="icono-circulo" cx="13.5" cy="13.5" r="9" />
       {children}
     </svg>
   );

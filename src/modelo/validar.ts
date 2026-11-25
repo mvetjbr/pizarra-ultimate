@@ -106,5 +106,6 @@ export function normalizarJugada(v: unknown): Play | null {
     lado: unoDe(v.lado, ['izquierda', 'derecha'] as const, 'derecha'),
     orientacion: unoDe(v.orientacion, ['horizontal', 'vertical'] as const, 'horizontal'),
     pasos,
+    carpeta: txt(v.carpeta, 40).trim() || undefined,
   };
 }

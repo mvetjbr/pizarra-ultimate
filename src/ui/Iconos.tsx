@@ -8,11 +8,14 @@ function Icono({ children }: { children: ReactNode }) {
       height="24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
+      className="icono"
     >
+      {/* Círculo de color detrás, desplazado (regla de íconos de DESIGN.md) */}
+      <circle className="icono-circulo" cx="13.5" cy="13.5" r="9" />
       {children}
     </svg>
   );
@@ -68,6 +71,13 @@ export const IconoRehacer = () => (
     <path d="M20 9H9.5a5.5 5.5 0 000 11H13" />
   </Icono>
 );
+/** Muñequito: abre Formación y jugadores. */
+export const IconoJugadores = () => (
+  <Icono>
+    <circle cx="12" cy="5" r="2.2" />
+    <path d="M12 8v6M7 10.5l5-1.5 5 1.5M12 14l-3.5 6M12 14l3.5 6" />
+  </Icono>
+);
 export const IconoRotar = () => (
   <Icono>
     <path d="M21 12a9 9 0 11-3-6.7" />
@@ -109,5 +119,11 @@ export const IconoNotas = () => (
   <Icono>
     <path d="M6 3h9l4 4v14H6z" />
     <path d="M14 3v5h5M9 12h7M9 16h7" />
+  </Icono>
+);
+export const IconoUsuario = () => (
+  <Icono>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" />
   </Icono>
 );

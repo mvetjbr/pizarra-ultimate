@@ -4,13 +4,19 @@ import { normalizarJugada } from '../modelo/validar';
 
 const PREFIJO = '#/ver/';
 
-/** Redondea a 10 cm y quita datos que no hacen falta para ver la jugada. */
+/**
+ * Redondea a 10 cm y quita datos que no hacen falta para ver la jugada.
+ * Los nombres del roster NO viajan en el enlace (son datos personales de terceros):
+ * quien lo abre ve el dorsal o las iniciales de la ficha.
+ */
 function compactar(j: Play): string {
   const { creada: _c, editada: _e, ...resto } = j;
   void _c;
   void _e;
-  return JSON.stringify(resto, (clave, valor) => {
+  return JSON.stringify(resto, function (this: Record<string, unknown>, clave: string, valor: unknown) {
     if (clave === 'rosterId') return undefined;
+    // Solo el nombre de los jugadores (objetos con `equipo`), no el de la jugada.
+    if (clave === 'nombre' && 'equipo' in this) return undefined;
     if (typeof valor === 'number') return Math.round(valor * 10) / 10;
     if (valor === false) return undefined;
     return valor;
