@@ -427,3 +427,16 @@
 [data-tema='afro'] .barra-superior {
   overflow: visible;
 }
+
+/* En el celular las herramientas se reparten el ancho en todos los temas */
+@media (max-width: 760px) {
+  [data-tema='organico'] .boton-herramienta {
+    min-width: 0;
+  }
+}
+@media (max-width: 760px) {
+  /* Mayúsculas espaciadas (Minimalista, Electronic): menos espacio para que quepan en el celular */
+  .boton-herramienta span {
+    letter-spacing: min(var(--espaciado-etiqueta), 0.03em);
+  }
+}

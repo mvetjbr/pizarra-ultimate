@@ -445,10 +445,27 @@ button:disabled .icono-circulo {
   .barra-superior {
     gap: 4px;
     padding: 4px 6px;
+    /* En el celular instalado, la barra no va debajo del reloj y la batería */
+    padding-top: max(4px, env(safe-area-inset-top));
+  }
+  /* Las 7 herramientas se reparten el ancho: ninguna queda cortada */
+  .herramientas {
+    gap: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
   }
   .boton-herramienta {
+    flex: 1 1 0;
+    min-width: 0;
     min-height: 42px;
+    padding: 2px 0;
     font-size: 0.62rem;
+  }
+  .boton-herramienta span {
+    overflow: hidden;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .linea-tiempo {
     padding: 4px 6px;
