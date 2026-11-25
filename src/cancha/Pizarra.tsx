@@ -37,7 +37,11 @@ type Gesto =
   // Borrar y Texto actúan al levantar el dedo: así un zoom con dos dedos no borra ni crea nada.
   | { tipo: 'toque'; pointerId: number; accion: 'borrar' | 'texto'; p: Punto; tipoObj?: TipoSeleccion; id?: string }
   // Arrastrar la cancha con un dedo cuando hay zoom (u = punto de la cancha bajo el dedo).
-  | { tipo: 'arrastre'; pointerId: number; u: Punto };
+  | { tipo: 'arrastre'; pointerId: number; u: Punto }
+  // Recuadro para elegir varios jugadores (con Mover, arrastrando en un espacio vacío).
+  | { tipo: 'marco'; pointerId: number; inicio: Punto }
+  // Mover juntos los jugadores del grupo (posición de cada uno al empezar).
+  | { tipo: 'grupo'; pointerId: number; inicio: Punto; origenes: Record<string, Punto> };
 
 /** Zoom del editor: cuánto se acerca y qué punto de la cancha queda al centro. */
 type Zoom = { escala: number; cx: number; cy: number };
@@ -60,7 +64,10 @@ function cajaVisible(region: Rect, ancho: number, alto: number, zoom: Zoom | nul
   return { x: cx - w / 2, y: cy - h / 2, w, h };
 }
 
-type Borrador = { tipo: 'flecha'; flecha: TipoFlecha; a: Punto; b: Punto; anclado: boolean } | { tipo: 'zona'; a: Punto; b: Punto };
+type Borrador =
+  | { tipo: 'flecha'; flecha: TipoFlecha; a: Punto; b: Punto; anclado: boolean }
+  | { tipo: 'zona'; a: Punto; b: Punto }
+  | { tipo: 'marco'; a: Punto; b: Punto };
 
 /** Tamaño mínimo del área táctil en píxeles de pantalla (radio de 22 px = 44 px). */
 const RADIO_TOQUE_PX = 22;
@@ -83,6 +90,7 @@ export function Pizarra() {
   const paso = useEditor(pasoActivo);
   const herramienta = useEditor((s) => s.herramienta);
   const seleccion = useEditor((s) => s.seleccion);
+  const grupo = useEditor((s) => s.grupo);
   const formaZona = useEditor((s) => s.formaZona);
   const prefs = usePreferencias();
   const tema = useTema((s) => s.tema);
@@ -268,13 +276,21 @@ export function Pizarra() {
 
     // Seleccionar y mover
     if (!obj) {
+      // Arrastrar en un espacio vacío dibuja un recuadro para elegir varios jugadores.
+      // (Con zoom, la cancha se mueve con dos dedos.)
       st.seleccionar(null);
-      // Con zoom, arrastrar en un espacio vacío mueve la cancha.
-      const u = zoomRef.current ? aDibujo(e.clientX, e.clientY) : null;
-      if (u) {
-        gesto.current = { tipo: 'arrastre', pointerId, u };
-        capturar();
-      }
+      gesto.current = { tipo: 'marco', pointerId, inicio: p };
+      setBorrador({ tipo: 'marco', a: p, b: p });
+      capturar();
+      return;
+    }
+    // Tocar un jugador del grupo mueve a todo el grupo.
+    if (obj.tipo === 'jugador' && st.grupo.length > 1 && st.grupo.includes(obj.id)) {
+      const origenes: Record<string, Punto> = {};
+      for (const j of pasoAct.jugadores) if (st.grupo.includes(j.id)) origenes[j.id] = { x: j.x, y: j.y };
+      st.iniciarGesto();
+      gesto.current = { tipo: 'grupo', pointerId, inicio: p, origenes };
+      capturar();
       return;
     }
     st.seleccionar({ tipo: obj.tipo, id: obj.id });
@@ -308,6 +324,34 @@ export function Pizarra() {
     if (!g || e.pointerId !== g.pointerId) return;
     if (g.tipo === 'arrastre') {
       fijarZoom(zoomRef.current?.escala ?? 1, g.u, { x: e.clientX, y: e.clientY });
+      return;
+    }
+    if (g.tipo === 'marco') {
+      const q = aMetros(e);
+      if (q) setBorrador({ tipo: 'marco', a: g.inicio, b: q });
+      return;
+    }
+    if (g.tipo === 'grupo') {
+      const q = aMetros(e);
+      if (!q) return;
+      const mx = q.x - g.inicio.x;
+      const my = q.y - g.inicio.y;
+      useEditor.getState().moverGesto((_, paso) => {
+        for (const j of paso.jugadores) {
+          const o = g.origenes[j.id];
+          if (!o) continue;
+          const dx = o.x + mx - j.x;
+          const dy = o.y + my - j.y;
+          j.x += dx;
+          j.y += dy;
+          // Los pases curvos de cada jugador conservan su forma.
+          for (const f of paso.flechas) {
+            if (!f.control) continue;
+            const k = (f.desdeId === j.id ? 0.5 : 0) + (f.hastaId === j.id ? 0.5 : 0);
+            if (k) f.control = { x: f.control.x + dx * k, y: f.control.y + dy * k };
+          }
+        }
+      });
       return;
     }
     const p = aMetros(e);
@@ -394,6 +438,17 @@ export function Pizarra() {
     switch (g.tipo) {
       case 'arrastre':
         return;
+      case 'marco': {
+        // Elige a los jugadores que quedaron dentro del recuadro.
+        const x1 = Math.min(g.inicio.x, p.x);
+        const x2 = Math.max(g.inicio.x, p.x);
+        const y1 = Math.min(g.inicio.y, p.y);
+        const y2 = Math.max(g.inicio.y, p.y);
+        const ids = pasoAct.jugadores.filter((j) => j.x >= x1 && j.x <= x2 && j.y >= y1 && j.y <= y2).map((j) => j.id);
+        if (ids.length === 1) st.seleccionar({ tipo: 'jugador', id: ids[0] });
+        else if (ids.length > 1) st.seleccionarGrupo(ids);
+        return;
+      }
       case 'toque':
         // Solo cuenta si el dedo no se desplazó (si se movió, era otra cosa).
         if (distancia(g.p, p) > Math.max(1.5, radioToque)) return;
@@ -502,6 +557,25 @@ export function Pizarra() {
         tema={tema}
       />
     );
+  } else if (borrador?.tipo === 'marco') {
+    const x = Math.min(borrador.a.x, borrador.b.x);
+    const y = Math.min(borrador.a.y, borrador.b.y);
+    vistaBorrador = (
+      <rect
+        className="marco-seleccion"
+        x={x}
+        y={y}
+        width={Math.abs(borrador.b.x - borrador.a.x)}
+        height={Math.abs(borrador.b.y - borrador.a.y)}
+        rx={0.6}
+        fill={tema.seleccion}
+        fillOpacity={0.12}
+        stroke={tema.seleccion}
+        strokeWidth={1.5}
+        strokeDasharray="5 4"
+        vectorEffect="non-scaling-stroke"
+      />
+    );
   } else if (borrador?.tipo === 'zona') {
     const x = Math.min(borrador.a.x, borrador.b.x);
     const y = Math.min(borrador.a.y, borrador.b.y);
@@ -538,6 +612,7 @@ export function Pizarra() {
           tema={tema}
           mostrarMatch={prefs.mostrarMatch}
           seleccion={cuadro ? null : seleccion}
+          grupo={cuadro ? undefined : grupo}
           radioToque={radioToque}
           escalaFichas={escalaFichas}
           opacidadFlechas={cuadro?.opacidadFlechas}

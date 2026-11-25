@@ -27,6 +27,8 @@ interface EstadoEditor {
   pasoActual: number;
   herramienta: Herramienta;
   seleccion: Seleccion | null;
+  /** Varios jugadores elegidos con el recuadro (se mueven juntos). */
+  grupo: string[];
   formaZona: FormaZona;
   pasado: Play[];
   futuro: Play[];
@@ -38,6 +40,7 @@ interface EstadoEditor {
 
   setHerramienta: (h: Herramienta) => void;
   seleccionar: (s: Seleccion | null) => void;
+  seleccionarGrupo: (ids: string[]) => void;
   setFormaZona: (f: FormaZona) => void;
   setPresentando: (v: boolean) => void;
 
@@ -87,6 +90,7 @@ export const useEditor = create<EstadoEditor>((set, get) => ({
   pasoActual: 0,
   herramienta: 'seleccionar',
   seleccion: null,
+  grupo: [],
   formaZona: 'rect',
   pasado: [],
   futuro: [],
@@ -95,10 +99,11 @@ export const useEditor = create<EstadoEditor>((set, get) => ({
   presentando: false,
   compartida: null,
 
-  setHerramienta: (herramienta) => set({ herramienta, seleccion: null }),
-  seleccionar: (seleccion) => set({ seleccion }),
+  setHerramienta: (herramienta) => set({ herramienta, seleccion: null, grupo: [] }),
+  seleccionar: (seleccion) => set({ seleccion, grupo: [] }),
+  seleccionarGrupo: (grupo) => set({ grupo, seleccion: null }),
   setFormaZona: (formaZona) => set({ formaZona }),
-  setPresentando: (presentando) => set({ presentando, seleccion: null }),
+  setPresentando: (presentando) => set({ presentando, seleccion: null, grupo: [] }),
 
   cambiar: (fn) =>
     set((s) => ({
@@ -132,6 +137,7 @@ export const useEditor = create<EstadoEditor>((set, get) => ({
         futuro: [s.jugada, ...s.futuro].slice(0, LIMITE_HISTORIAL),
         pendiente: null,
         seleccion: null,
+        grupo: [],
         pasoActual: Math.min(s.pasoActual, prev.pasos.length - 1),
       };
     }),
@@ -145,6 +151,7 @@ export const useEditor = create<EstadoEditor>((set, get) => ({
         futuro: s.futuro.slice(1),
         pendiente: null,
         seleccion: null,
+        grupo: [],
         pasoActual: Math.min(s.pasoActual, sig.pasos.length - 1),
       };
     }),
@@ -154,6 +161,7 @@ export const useEditor = create<EstadoEditor>((set, get) => ({
       jugada: j,
       pasoActual: 0,
       seleccion: null,
+      grupo: [],
       pendiente: null,
       pasado: conHistorial ? [...s.pasado, s.jugada].slice(-LIMITE_HISTORIAL) : [],
       futuro: [],

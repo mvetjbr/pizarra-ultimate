@@ -74,6 +74,7 @@ function Opciones<T extends string>({
 
 export function PanelPropiedades() {
   const sel = useEditor((s) => s.seleccion);
+  const grupo = useEditor((s) => s.grupo);
   const paso = useEditor(pasoActivo);
   const herramienta = useEditor((s) => s.herramienta);
   const formaZona = useEditor((s) => s.formaZona);
@@ -82,6 +83,18 @@ export function PanelPropiedades() {
   // Jugadores y flechas: burbuja pequeña; el panel completo solo si se pide con «⋯».
   const [expandido, setExpandido] = useState<string | null>(null);
   const claveSel = sel ? `${sel.tipo}:${sel.id}` : null;
+
+  // Varios jugadores elegidos con el recuadro: se mueven arrastrando cualquiera de ellos.
+  if (grupo.length > 1) {
+    return (
+      <div className="burbuja-seleccion" role="toolbar" aria-label="Jugadores seleccionados">
+        <span className="burbuja-cuenta">{grupo.length} jugadores</span>
+        <button onClick={() => seleccionar(null)} title="Quitar la selección" aria-label="Quitar la selección">
+          ×
+        </button>
+      </div>
+    );
+  }
 
   // Sin selección: opciones de la herramienta de zona.
   if (!sel) {
