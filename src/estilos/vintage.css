@@ -1,0 +1,365 @@
+/*
+ * Tema vintage (afiche deportivo de los 70-80). Las reglas están en DESIGN.md.
+ * Se carga después de los demás estilos: define los colores como variables y le da a los
+ * componentes bordes de 3 px en tinta, sombras sólidas desplazadas y títulos en Shrikhand.
+ */
+
+:root {
+  /* Fondos */
+  --crema: #f5ead3;
+  --crema-2: #ecd9b4;
+  --papel: #fbf5e9;
+  /* Tinta */
+  --tinta: #1e2a33;
+  --tinta-suave: #4a5862;
+  /* Acentos */
+  --coral: #e6785e;
+  --petroleo: #1f6874;
+  --mostaza: #dca43a;
+  --naranja: #e5853b;
+  /* Cancha */
+  --cesped: #3f7f5e;
+  --cesped-zona: #356b50;
+  --linea-cancha: #f5ead3;
+
+  /* Forma */
+  --borde-grueso: 3px solid var(--tinta);
+  --sombra: 3px 3px 0 var(--tinta);
+  --sombra-grande: 6px 6px 0 var(--tinta);
+  --radio: 10px;
+  --radio-grande: 16px;
+  --icono-circulo: var(--mostaza);
+
+  /* Tipografía */
+  --fuente-titulo: 'Shrikhand', 'Work Sans', system-ui, sans-serif;
+  --fuente-texto: 'Work Sans', system-ui, sans-serif;
+
+  /* Las variables que ya usaba la app, ahora apuntan a la paleta vintage */
+  --fondo: var(--crema);
+  --superficie: var(--papel);
+  --borde: var(--tinta);
+  --texto: var(--tinta);
+  --texto-suave: var(--tinta-suave);
+  --primario: var(--petroleo);
+  --primario-claro: var(--mostaza);
+  --peligro: #b8432f;
+  --fondo-cancha: var(--cesped-zona);
+
+  font-family: var(--fuente-texto);
+  color: var(--tinta);
+  background: var(--crema);
+}
+
+body {
+  background: var(--crema);
+  font-family: var(--fuente-texto);
+}
+button,
+input,
+textarea,
+select,
+summary {
+  font-family: var(--fuente-texto);
+}
+:focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: 2px;
+}
+
+/* ---------- Títulos en Shrikhand ---------- */
+.dialogo-cabecera h2,
+.pagina h1,
+.pagina-cuerpo h2,
+.pres-cabecera h1,
+.detalle-libro h3,
+.panel-compartir h3 {
+  font-family: var(--fuente-titulo);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--tinta);
+}
+.dialogo-cabecera h2 {
+  font-size: 1.35rem;
+}
+
+/* ---------- Íconos: trazo redondeado de 1,8 px con círculo detrás ---------- */
+.icono-circulo {
+  fill: var(--icono-circulo);
+  stroke: none;
+}
+svg.icono {
+  stroke-width: 1.8;
+}
+[aria-pressed='true'] .icono-circulo,
+.activa .icono-circulo {
+  fill: var(--coral);
+}
+button:disabled .icono-circulo {
+  fill: var(--crema-2);
+}
+
+/* ---------- Controles: borde de 3 px en tinta y sombra sólida ---------- */
+.boton-icono,
+.boton-texto,
+.segmentado,
+.chip,
+.proporcion,
+.buscador,
+.campo input,
+.campo textarea,
+.campo select,
+.selector-carpeta,
+.lista-accesos select,
+.nombre-jugada:hover,
+.nombre-jugada:focus {
+  border: var(--borde-grueso);
+  border-radius: var(--radio);
+}
+.boton-icono,
+.boton-texto,
+.segmentado,
+.chip,
+.proporcion {
+  box-shadow: var(--sombra);
+  transition: transform 0.06s, box-shadow 0.06s;
+}
+.chip,
+.proporcion {
+  border-radius: 999px;
+}
+.boton-icono:active:not(:disabled),
+.boton-texto:active:not(:disabled),
+.chip:active,
+.segmentado button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--tinta);
+}
+.boton-icono,
+.boton-texto {
+  background: var(--papel);
+  color: var(--tinta);
+  font-weight: 600;
+}
+.boton-icono:disabled,
+.boton-texto:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+/* Primario: bloque plano en azul petróleo con texto crema */
+.boton-texto.primario,
+.boton-icono.primario {
+  background: var(--petroleo);
+  border-color: var(--tinta);
+  color: var(--crema);
+}
+.boton-texto.peligro,
+.menu-lista .peligro {
+  color: var(--peligro);
+}
+
+/* Activo en bloque claro: mostaza con tinta */
+.boton-icono[aria-pressed='true'] {
+  background: var(--mostaza);
+  border-color: var(--tinta);
+  color: var(--tinta);
+}
+
+/* Segmentados: separadores de 2 px, el elegido en petróleo */
+.segmentado {
+  background: var(--papel);
+}
+.segmentado button {
+  border-right: 2px solid var(--tinta);
+  background: transparent;
+  color: var(--tinta);
+  font-weight: 600;
+}
+.segmentado button[aria-pressed='true'] {
+  background: var(--petroleo);
+  color: var(--crema);
+}
+
+/* Chips: crema-2 inactivos, petróleo activo */
+.chip {
+  background: var(--crema-2);
+  color: var(--tinta);
+  font-weight: 600;
+}
+.chip[aria-pressed='true'] {
+  background: var(--petroleo);
+  border-color: var(--tinta);
+  color: var(--crema);
+}
+.chip-nueva {
+  border-style: dashed;
+  background: var(--papel);
+  color: var(--tinta);
+}
+.proporcion {
+  background: var(--mostaza);
+  color: var(--tinta);
+}
+.proporcion.alerta {
+  background: var(--coral);
+  color: var(--tinta);
+}
+
+/* ---------- Barras: bloques planos en crema-2 con borde de tinta ---------- */
+.barra-superior {
+  background: var(--crema-2);
+  border-bottom: var(--borde-grueso);
+}
+.herramientas {
+  background: var(--crema-2);
+  border-right: var(--borde-grueso);
+}
+.linea-tiempo {
+  background: var(--crema-2);
+  border-top: var(--borde-grueso);
+}
+.boton-herramienta {
+  color: var(--tinta);
+  font-weight: 600;
+}
+.boton-herramienta:hover {
+  background: var(--papel);
+}
+.boton-herramienta.activa {
+  background: var(--papel);
+  border: var(--borde-grueso);
+  box-shadow: var(--sombra);
+  color: var(--tinta);
+}
+.boton-herramienta.peligro.activa {
+  background: var(--coral);
+  border-color: var(--tinta);
+  color: var(--tinta);
+}
+
+/* Miniaturas de pasos */
+.miniatura {
+  border: var(--borde-grueso);
+  border-radius: var(--radio);
+}
+.miniatura.activa {
+  box-shadow: var(--sombra);
+  outline: 3px solid var(--mostaza);
+  outline-offset: -6px;
+}
+
+/* ---------- Ventanas, menú y tarjetas ---------- */
+.fondo-dialogo {
+  background: rgba(30, 42, 51, 0.55);
+}
+.dialogo {
+  background: var(--papel);
+  border: var(--borde-grueso);
+  border-radius: var(--radio-grande);
+  box-shadow: var(--sombra-grande);
+}
+.dialogo-cabecera {
+  background: var(--mostaza);
+  border-bottom: var(--borde-grueso);
+  border-radius: calc(var(--radio-grande) - 3px) calc(var(--radio-grande) - 3px) 0 0;
+}
+.dialogo-pie {
+  border-top: var(--borde-grueso);
+  background: var(--crema-2);
+  border-radius: 0 0 calc(var(--radio-grande) - 3px) calc(var(--radio-grande) - 3px);
+}
+.pestanas {
+  border-bottom: 2px solid var(--tinta);
+}
+.pestanas button {
+  color: var(--tinta-suave);
+}
+.pestanas button[aria-selected='true'] {
+  border-bottom-color: var(--coral);
+  color: var(--tinta);
+}
+.menu-lista {
+  background: var(--papel);
+  border: var(--borde-grueso);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-grande);
+}
+.menu-lista hr {
+  border: none;
+  border-top: 2px solid var(--tinta);
+  opacity: 0.25;
+}
+.menu-lista > button:hover:not(:disabled),
+.menu-lista > label:hover {
+  background: var(--crema-2);
+}
+
+.tarjeta {
+  background: var(--papel);
+  border: var(--borde-grueso);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+}
+.tarjeta.actual {
+  border-color: var(--tinta);
+  box-shadow: var(--sombra-grande);
+  outline: 3px solid var(--mostaza);
+  outline-offset: 2px;
+}
+.lista-filas > li {
+  background: var(--papel);
+  border: var(--borde-grueso);
+  box-shadow: var(--sombra);
+}
+.chip-etiqueta,
+.etiqueta-permiso,
+.etiqueta-estado {
+  background: var(--mostaza);
+  color: var(--tinta);
+  border: 2px solid var(--tinta);
+}
+.etiqueta-permiso.ver {
+  background: var(--crema-2);
+  color: var(--tinta);
+}
+
+/* Panel de propiedades y avisos */
+.panel {
+  background: var(--papel);
+  border: var(--borde-grueso);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-grande);
+}
+.banner-compartida {
+  background: var(--mostaza);
+  border-bottom: var(--borde-grueso);
+  color: var(--tinta);
+}
+
+/* Superposiciones sobre la cancha: bloques planos de tinta */
+.leyenda,
+.burbuja-seleccion,
+.boton-zoom {
+  background: var(--tinta);
+  color: var(--crema);
+  border: 2px solid var(--crema);
+}
+.ayuda {
+  background: var(--crema);
+  color: var(--tinta);
+  border: var(--borde-grueso);
+  box-shadow: var(--sombra);
+}
+.burbuja-seleccion button.borrar {
+  background: var(--coral);
+  color: var(--tinta);
+}
+
+/* Páginas (cuenta, legal, administración) */
+.pagina {
+  background: var(--crema);
+}
+.pagina-cabecera {
+  background: var(--crema-2);
+  border-bottom: var(--borde-grueso);
+}

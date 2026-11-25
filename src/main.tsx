@@ -12,6 +12,7 @@ import './estilos/biblioteca.css';
 import './estilos/conteo.css';
 import './estilos/cuenta.css';
 import './estilos/nube.css';
+import './estilos/vintage.css'; // tema de DESIGN.md: siempre el último
 
 void iniciarPersistencia().then(() => {
   // La sincronización arranca cuando la biblioteca local ya está cargada.

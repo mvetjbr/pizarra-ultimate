@@ -8,11 +8,14 @@ function Icono({ children }: { children: ReactNode }) {
       height="24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
+      className="icono"
     >
+      {/* Círculo de color detrás, desplazado (regla de íconos de DESIGN.md) */}
+      <circle className="icono-circulo" cx="13.5" cy="13.5" r="9" />
       {children}
     </svg>
   );
