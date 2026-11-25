@@ -119,6 +119,10 @@ En macOS o Linux:
 BASE_PATH=/ npm run build
 ```
 
+## Decisiones de arquitectura
+
+Las decisiones importantes del proyecto (por qué Vite, por qué Supabase, cómo se guardan los consentimientos, etc.) están en [docs/adr](docs/adr/README.md).
+
 ## Estructura
 
 ```
