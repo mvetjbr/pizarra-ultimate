@@ -1,0 +1,278 @@
+/* ---------- Páginas fuera del editor (legal, cuenta, mis datos) ---------- */
+/* Cada página desplaza su propio contenido (como el editor, el documento nunca se desplaza). */
+.pagina {
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--fondo);
+  color: var(--texto);
+}
+.pagina-cabecera {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  padding-top: max(8px, env(safe-area-inset-top));
+  background: var(--superficie);
+  border-bottom: 1px solid var(--borde);
+}
+.pagina-cuerpo {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 16px;
+  padding-bottom: max(32px, env(safe-area-inset-bottom));
+}
+.pagina-cuerpo.angosto {
+  max-width: 560px;
+}
+.pagina-cuerpo h1 {
+  margin: 8px 0 16px;
+  font-size: 1.6rem;
+}
+
+.pestanas-legales {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pestanas-legales a {
+  flex-shrink: 0;
+  padding: 10px 12px;
+  border-radius: var(--radio);
+  color: var(--texto-suave);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.pestanas-legales a[aria-current='page'] {
+  background: var(--primario-claro);
+  color: var(--primario);
+}
+.selector-version {
+  max-width: 220px;
+  margin-bottom: 12px;
+}
+
+/* ---------- Texto legal ---------- */
+.texto-legal {
+  line-height: 1.55;
+}
+.meta-legal {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--primario-claro);
+  color: var(--primario);
+  font-size: 0.9rem;
+}
+.markdown h2 {
+  font-size: 1.35rem;
+  margin: 18px 0 8px;
+}
+.markdown h3 {
+  font-size: 1.15rem;
+}
+.markdown h4,
+.markdown h5 {
+  font-size: 1.02rem;
+  margin: 18px 0 6px;
+}
+.markdown p,
+.markdown li {
+  font-size: 1rem;
+}
+.markdown blockquote {
+  margin: 10px 0;
+  padding: 8px 12px;
+  border-left: 4px solid var(--borde);
+  background: var(--superficie);
+}
+.markdown mark {
+  padding: 0 3px;
+  border-radius: 4px;
+  background: #fff1b8;
+  color: #6b4e00;
+  font-weight: 700;
+}
+.tabla-legal {
+  overflow-x: auto;
+}
+.tabla-legal table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.tabla-legal th,
+.tabla-legal td {
+  padding: 6px 8px;
+  border: 1px solid var(--borde);
+  text-align: left;
+  vertical-align: top;
+}
+.tabla-legal th {
+  background: var(--superficie);
+}
+
+/* ---------- Formularios de cuenta ---------- */
+.fila-campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+.ayuda-campo {
+  color: var(--texto-suave);
+  font-weight: 400;
+}
+.error-campo {
+  color: var(--peligro);
+  font-weight: 600;
+}
+.campo.con-error input {
+  border-color: var(--peligro);
+}
+.campo input[type='date'],
+.campo input[type='email'],
+.campo input[type='password'],
+.campo input[type='number'] {
+  min-height: var(--toque);
+}
+.opcionales {
+  margin: 0;
+  padding: 10px 12px 14px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+}
+.opcionales legend {
+  padding: 0 6px;
+  color: var(--texto-suave);
+  font-weight: 700;
+}
+.casillas-legales {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.casilla-legal {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  align-items: start;
+}
+.casilla-legal input {
+  width: 24px;
+  height: 24px;
+  margin-top: 1px;
+}
+.casilla-legal label {
+  font-weight: 600;
+  line-height: 1.35;
+}
+.casilla-legal .enlace {
+  grid-column: 2;
+  justify-self: start;
+}
+.enlace {
+  min-height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #0b6bb5;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.aviso-privacidad {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--superficie);
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+}
+.aviso-privacidad .markdown p {
+  display: inline;
+  font-size: 0.85rem;
+}
+.error-formulario {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fdecea;
+  color: var(--peligro);
+  font-weight: 600;
+}
+.aviso-formulario {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff6db;
+  color: #6b4e00;
+}
+.boton-texto.grande {
+  min-height: 52px;
+  justify-content: center;
+  font-size: 1.05rem;
+}
+.enlaces-cuenta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 16px 0;
+}
+.pie-legal {
+  margin-top: 28px;
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* ---------- Mis datos ---------- */
+.seccion-datos {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  background: var(--superficie);
+}
+.seccion-datos h2 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+}
+.seccion-datos.peligro {
+  border-color: #f2b8b5;
+}
+.lista-registros {
+  margin: 10px 0 0;
+  padding-left: 18px;
+}
+.lista-registros li {
+  margin-bottom: 6px;
+}
+.respuesta-solicitud {
+  margin: 4px 0 0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--fondo);
+}
+
+/* ---------- Botón de cuenta en la barra ---------- */
+.avatar-mini {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--primario);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.boton-icono.con-sesion {
+  border-color: var(--primario);
+}

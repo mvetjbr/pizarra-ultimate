@@ -1,0 +1,14 @@
+{
+  "terminos": {
+    "1.0.0": "827f8e512e4fb99f22985bc24013ef4122a2ac75dead8f92effaa47aff8a90c7"
+  },
+  "privacidad": {
+    "1.0.0": "53641de391e731d6a34e05d29175e16a87d3672f6a053396b5873b2cf40e0e12"
+  },
+  "cookies": {
+    "1.1.0": "5f88f55de52133da1ac74e59f56d5f282d1ae65e93aa1341c1620b5f9f8db546"
+  },
+  "creditos": {
+    "1.1.0": "56e3b827bf8ebe71570ee5d56e4f040bb0c4c5e69ed875c1b0691d523e7e4325"
+  }
+}

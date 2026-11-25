@@ -111,3 +111,9 @@ export const IconoNotas = () => (
     <path d="M14 3v5h5M9 12h7M9 16h7" />
   </Icono>
 );
+export const IconoUsuario = () => (
+  <Icono>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" />
+  </Icono>
+);
