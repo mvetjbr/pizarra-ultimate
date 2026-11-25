@@ -182,6 +182,20 @@ Siguen la regla del Estilo Orgánico, recoloreada con los acentos de este estilo
   - movimiento defensivo: `--coral`.
 - Cada persona puede cambiar los colores de equipo en el menú; estos son solo los valores iniciales.
 
+## Muñecos del conteo
+
+Son ilustraciones con su propia paleta, así que llevan colores en el SVG y no usan variables del tema. Están en `src/conteo/munecosSvg.ts`, y las reglas técnicas están en el [ADR 0013](docs/adr/0013-munecos-y-premios.md).
+- **Contorno:** en tinta `#1e2a33`, de 2,2 en los cuerpos y 1,5 en los detalles. Los brazos y las piernas se dibujan con `trazo()`, que pone la tinta debajo del color.
+- **Colores:** planos, sin degradados ni brillos. La sombra del piso es tinta al 20 %.
+- **Caras:**
+  - ojos con blanco, pupila y un punto de luz (`ojo()`);
+  - mejillas en coral al 50 %;
+  - boca ovalada con la clase `mth`.
+- **Tamaño:** se tienen que entender a 34 × 46 px, que es como se ven sobre la cancha. Si un detalle desaparece a ese tamaño, sobra.
+- **Figuras religiosas o de culturas reales** (Jesús, Buda): siempre serenas y amables, nunca burlonas.
+- **Bloqueados:** en gris al 35 % con un candado.
+- **Ventana del premio:** cada mascota lleva su nombre debajo.
+
 ## Evitar
 
 - Sombras difuminadas, degradados y brillos.

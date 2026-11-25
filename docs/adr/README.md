@@ -16,5 +16,6 @@ Cada archivo registra una decisión: qué la motivó, qué se decidió y qué co
 | [0010](0010-compartir-por-enlace.md) | Compartir por enlace con permisos validados en la base de datos | aceptada |
 | [0011](0011-libros-de-jugadas.md) | Libros de jugadas solo en la nube y siempre del mismo dueño | aceptada |
 | [0012](0012-interfaz-celular-y-zoom.md) | En el celular la cancha sigue al aparato, con zoom con dos dedos | aceptada |
+| [0013](0013-munecos-y-premios.md) | Muñecos del conteo: premios que elige la persona | aceptada |
 
 Plantilla para uno nuevo: `# ADR 00XX · Título`, seguido de Estado, Fecha, Contexto, Decisión y Consecuencias.

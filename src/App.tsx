@@ -10,6 +10,7 @@ import { LineaTiempo } from './ui/LineaTiempo';
 import { ModoPresentacion } from './ui/ModoPresentacion';
 import { Aviso } from './ui/Aviso';
 import { Conteo } from './conteo/Conteo';
+import { AvisoPremio } from './conteo/ElegirMascota';
 import { useRuta } from './estado/ruta';
 import { useSesion } from './nube/sesion';
 import { PantallaLegal } from './ui/cuenta/PantallaLegal';
@@ -171,6 +172,7 @@ export default function App() {
         </div>
       </div>
       {debeAceptar ? <ReAceptar /> : <PreguntaSubir />}
+      <AvisoPremio />
       <Aviso />
     </div>
   );

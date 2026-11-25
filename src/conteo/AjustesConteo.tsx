@@ -1,18 +1,30 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { usePreferencias } from '../estado/preferencias';
 import { useBiblioteca } from '../estado/bibliotecaStore';
 import { avisar } from '../estado/avisos';
 import { Dialogo } from '../ui/Dialogo';
 import { DIBUJO_MUNECO } from './munecosSvg';
-import { estaBloqueado, msPorNumero, munecoVisible, textoDesbloqueo, TODOS_LOS_MUNECOS } from './munecos';
+import {
+  estaBloqueado,
+  msPorNumero,
+  munecoVisible,
+  premiosPendientes,
+  textoDesbloqueo,
+  TODOS_LOS_MUNECOS,
+} from './munecos';
 import { DibujoMuneco } from './Conteo';
+import { ElegirMascota } from './ElegirMascota';
 
 /** Mostrar u ocultar el muñeco, elegirlo y ajustar la velocidad del conteo. */
 export function AjustesConteo({ alCerrar }: { alCerrar: () => void }) {
   const prefs = usePreferencias();
   const jugadas = useBiblioteca((s) => s.jugadas.length);
-  const actual = munecoVisible(prefs.muneco, jugadas, prefs.modoEditor);
+  const elegidas = prefs.mascotasElegidas;
+  const actual = munecoVisible(prefs.muneco, elegidas, prefs.modoEditor);
+  const pendientes = premiosPendientes(jugadas, elegidas, prefs.modoEditor);
   const ms = msPorNumero(prefs.velocidadConteo);
+  // Mascota bloqueada que se tocó teniendo un premio: se abre la ventana para desbloquearla.
+  const [eligiendo, setEligiendo] = useState<string | null>(null);
   // Siete toques seguidos en el título activan o desactivan el modo editor.
   const toques = useRef({ n: 0, t: 0 });
 
@@ -28,6 +40,8 @@ export function AjustesConteo({ alCerrar }: { alCerrar: () => void }) {
     }
   };
 
+  if (eligiendo) return <ElegirMascota inicial={eligiendo} alCerrar={() => setEligiendo(null)} />;
+
   return (
     <Dialogo titulo="Conteo de 10" alCerrar={alCerrar} pie={<button className="boton-texto primario" onClick={alCerrar}>Listo</button>}>
       <div className="formulario">
@@ -40,7 +54,7 @@ export function AjustesConteo({ alCerrar }: { alCerrar: () => void }) {
           <span onClick={tocarTitulo}>Muñeco</span>
           <div className="grilla-munecos" role="group" aria-label="Elegir muñeco">
             {TODOS_LOS_MUNECOS.map((k) => {
-              const bloqueado = estaBloqueado(k, jugadas, prefs.modoEditor);
+              const bloqueado = estaBloqueado(k, elegidas, prefs.modoEditor);
               return (
                 <button
                   key={k}
@@ -51,7 +65,8 @@ export function AjustesConteo({ alCerrar }: { alCerrar: () => void }) {
                   aria-label={`${DIBUJO_MUNECO[k].nombre}${bloqueado ? ' (bloqueado)' : ''}`}
                   title={DIBUJO_MUNECO[k].nombre}
                   onClick={() => {
-                    if (bloqueado) avisar(textoDesbloqueo(jugadas, prefs.modoEditor));
+                    if (bloqueado && pendientes > 0) setEligiendo(k);
+                    else if (bloqueado) avisar(textoDesbloqueo(jugadas, elegidas, prefs.modoEditor));
                     else prefs.actualizar({ muneco: k });
                   }}
                 >
@@ -67,7 +82,7 @@ export function AjustesConteo({ alCerrar }: { alCerrar: () => void }) {
             })}
           </div>
           <small className="ayuda-campo" aria-live="polite">
-            {textoDesbloqueo(jugadas, prefs.modoEditor)}
+            {textoDesbloqueo(jugadas, elegidas, prefs.modoEditor)}
           </small>
         </div>
 

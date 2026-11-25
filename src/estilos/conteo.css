@@ -200,6 +200,27 @@
   filter: grayscale(1);
   opacity: 0.35;
 }
+/* Ventana "¡Ganaste un muñeco!": cada mascota con su nombre debajo. */
+.grilla-munecos button.con-nombre {
+  flex-direction: column;
+  gap: 2px;
+  height: 104px;
+}
+.grilla-munecos button.con-nombre svg:first-child {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+}
+.nombre-muneco {
+  color: var(--texto);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+}
+.texto-premio {
+  margin: 0 0 10px;
+}
 .grilla-munecos .candado {
   position: absolute;
   right: 5px;

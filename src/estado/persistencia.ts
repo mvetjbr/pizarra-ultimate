@@ -6,6 +6,7 @@ import { useEditor } from './editorStore';
 import { useBiblioteca } from './bibliotecaStore';
 import { extraerPreferencias, usePreferencias, type Preferencias } from './preferencias';
 import { avisar } from './avisos';
+import { mascotasDelSistemaViejo } from '../conteo/munecos';
 import { useRoster, type MiembroRoster } from './rosterStore';
 import { hayEnlace, leerEnlace, limpiarEnlace } from '../exportar/enlace';
 
@@ -54,6 +55,11 @@ export async function iniciarPersistencia() {
       delete resto.colorAtaque;
       delete resto.colorDefensa;
       usePreferencias.getState().actualizar(resto as Partial<Preferencias>);
+    }
+    // Sistema de premios (ADR 0013): quien venía del desbloqueo en orden conserva sus mascotas.
+    if (!p || !Array.isArray(p.mascotasElegidas)) {
+      const jugadas = useBiblioteca.getState().jugadas.length;
+      usePreferencias.getState().actualizar({ mascotasElegidas: mascotasDelSistemaViejo(jugadas) });
     }
   } catch (e) {
     console.warn('No se pudieron leer las preferencias', e);

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePreferencias } from '../estado/preferencias';
-import { useBiblioteca } from '../estado/bibliotecaStore';
 import { DIBUJO_MUNECO, SVG_NUBE } from './munecosSvg';
 import { msPorNumero, munecoVisible } from './munecos';
 
@@ -23,8 +22,8 @@ export function Conteo() {
   const elegido = usePreferencias((s) => s.muneco);
   const velocidad = usePreferencias((s) => s.velocidadConteo);
   const modoEditor = usePreferencias((s) => s.modoEditor);
-  const jugadas = useBiblioteca((s) => s.jugadas.length);
-  const clave = munecoVisible(elegido, jugadas, modoEditor);
+  const mascotas = usePreferencias((s) => s.mascotasElegidas);
+  const clave = munecoVisible(elegido, mascotas, modoEditor);
 
   const [contando, setContando] = useState(false);
   const [texto, setTexto] = useState<string | null>(null);

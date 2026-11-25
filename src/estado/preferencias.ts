@@ -22,6 +22,8 @@ export interface Preferencias {
   velocidadConteo: number;
   /** Modo editor: todas las mascotas desbloqueadas en este dispositivo. */
   modoEditor: boolean;
+  /** Mascotas que la persona eligió con sus premios (ADR 0013). */
+  mascotasElegidas: string[];
 }
 
 export const PREFERENCIAS_INICIALES: Preferencias = {
@@ -38,6 +40,7 @@ export const PREFERENCIAS_INICIALES: Preferencias = {
   muneco: 'alien',
   velocidadConteo: 50,
   modoEditor: false,
+  mascotasElegidas: [],
 };
 
 interface EstadoPreferencias extends Preferencias {
@@ -68,5 +71,8 @@ export function extraerPreferencias(s: Preferencias): Preferencias {
     muneco: typeof s.muneco === 'string' ? s.muneco : 'alien',
     velocidadConteo: entre(s.velocidadConteo, 0, 100, 50),
     modoEditor: s.modoEditor === true,
+    mascotasElegidas: Array.isArray(s.mascotasElegidas)
+      ? s.mascotasElegidas.filter((k): k is string => typeof k === 'string').slice(0, 50)
+      : [],
   };
 }
