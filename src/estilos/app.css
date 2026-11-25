@@ -44,6 +44,10 @@ button {
   cursor: pointer;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 button:disabled {
   opacity: 0.4;
   cursor: default;
@@ -333,7 +337,47 @@ button:disabled {
   color: var(--peligro);
 }
 
+/* Partes que solo se ven en computador o solo en celular. */
+.solo-movil,
+.nombre-corto,
+.velocidad-ciclo {
+  display: none !important;
+}
+
+/* Filas del menu «⋯» que no son un solo botón. */
+.menu-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: var(--toque);
+  padding: 0 10px;
+  font-weight: 600;
+}
+.menu-lista .proporcion {
+  padding: 2px 8px;
+  font-size: 0.85rem;
+}
+
 /* ---------- Superposiciones sobre la cancha ---------- */
+.boton-zoom {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--toque);
+  padding: 0 12px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
 .leyenda {
   position: absolute;
   left: 10px;
@@ -353,6 +397,35 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+.leyenda.plegable {
+  padding-right: 34px;
+}
+.leyenda-cerrar,
+.leyenda-cerrada {
+  pointer-events: auto;
+}
+.leyenda-cerrar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 34px;
+  height: 100%;
+  min-height: 30px;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+.leyenda-cerrada {
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  border: none;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .ayuda {
@@ -437,6 +510,51 @@ button:disabled {
 
 /* ---------- Celular ---------- */
 @media (max-width: 760px) {
+  .solo-escritorio {
+    display: none !important;
+  }
+  .solo-movil {
+    display: flex !important;
+  }
+  hr.solo-movil {
+    display: block !important;
+  }
+  .nombre-largo {
+    display: none;
+  }
+  .nombre-corto {
+    display: inline !important;
+  }
+
+  /* Barra superior: Biblioteca, nombre, deshacer/rehacer, Compartir y «⋯» caben sin deslizar. */
+  .barra-superior {
+    gap: 4px;
+    padding: 6px;
+    padding-top: max(6px, env(safe-area-inset-top));
+    overflow-x: visible;
+  }
+  .nombre-jugada {
+    /* Base 0 y ancho 0: un input no se encoge por debajo de su ancho natural (~20 caracteres). */
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    padding: 0 6px;
+    font-size: 1rem;
+    text-overflow: ellipsis;
+  }
+  .barra-superior .boton-compartir {
+    min-width: var(--toque);
+    padding: 0 10px;
+  }
+  .menu-lista {
+    left: 8px;
+    right: 8px;
+    top: 56px;
+    min-width: 0;
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+  }
+
   .cuerpo {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr auto;
@@ -444,6 +562,7 @@ button:disabled {
   .herramientas {
     order: 2;
     flex-direction: row;
+    gap: 2px;
     padding: 4px;
     padding-bottom: max(4px, env(safe-area-inset-bottom));
     border-right: none;

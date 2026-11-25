@@ -15,6 +15,8 @@ interface Props {
   seleccion?: Seleccion | null;
   /** Radio táctil en metros; si falta, la capa es solo de lectura (miniaturas, presentación). */
   radioToque?: number;
+  /** Cuánto se agrandan las fichas de jugadores en pantalla (1 = tamaño real). */
+  escalaFichas?: number;
   /** Opacidad de las flechas (se desvanecen durante la animación). */
   opacidadFlechas?: number;
   /** Nombre a mostrar debajo de cada ficha (roster). */
@@ -22,7 +24,7 @@ interface Props {
 }
 
 /** Dibuja todos los elementos de un paso. Reutilizable en editor, miniaturas y presentación. */
-export function CapaElementos({ paso, rot, colorAtaque, colorDefensa, mostrarMatch, seleccion, radioToque, opacidadFlechas, nombreDe }: Props) {
+export function CapaElementos({ paso, rot, colorAtaque, colorDefensa, mostrarMatch, seleccion, radioToque, escalaFichas, opacidadFlechas, nombreDe }: Props) {
   const es = (tipo: string, id: string) => seleccion?.tipo === tipo && seleccion.id === id;
   const interactivo = radioToque !== undefined;
   const color = (equipo?: string) => (equipo === 'defensa' ? colorDefensa : colorAtaque);
@@ -71,6 +73,7 @@ export function CapaElementos({ paso, rot, colorAtaque, colorDefensa, mostrarMat
                 mostrarMatch={mostrarMatch}
                 seleccionado={es('jugador', j.id)}
                 radioToque={radioToque}
+                escala={escalaFichas}
                 nombre={nombreDe?.(j)}
               />
             ))}

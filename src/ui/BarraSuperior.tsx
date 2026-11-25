@@ -7,6 +7,10 @@ import { useVentana, type Ventana } from '../estado/ventanas';
 import { esIOS, instalar, useInstalacion } from '../estado/instalacion';
 import { avisar } from '../estado/avisos';
 import { cortarAnimacion } from '../animacion/reproductor';
+import { hayServidor } from '../nube/cliente';
+import { nombreVisible, useSesion } from '../nube/sesion';
+import { irA } from '../estado/ruta';
+import { iniciales } from '../estado/rosterStore';
 import {
   IconoBiblioteca,
   IconoCompartir,
@@ -15,6 +19,7 @@ import {
   IconoMenu,
   IconoRehacer,
   IconoRotar,
+  IconoUsuario,
 } from './Iconos';
 import { Biblioteca } from './Biblioteca';
 import { DetallesJugada } from './DetallesJugada';
@@ -23,6 +28,7 @@ import { Roster } from './Roster';
 import { Jugadores } from './Jugadores';
 import { AjustesConteo } from '../conteo/AjustesConteo';
 import { proporcionValida } from '../estado/jugadores';
+import { useOrientacionAutomatica } from '../estado/pantalla';
 
 const VISTAS: { id: Vista; nombre: string }[] = [
   { id: 'completa', nombre: 'Completa' },
@@ -42,6 +48,9 @@ export function BarraSuperior() {
   const puedeInstalar = useInstalacion((s) => !!s.evento);
   const instalada = useInstalacion((s) => s.instalada);
   const menu = useRef<HTMLDetailsElement>(null);
+  const usuario = useSesion((s) => s.usuario);
+  const perfil = useSesion((s) => s.perfil);
+  const orientacionAutomatica = useOrientacionAutomatica();
 
   const ataque = paso.jugadores.filter((j) => j.equipo === 'ataque');
   const defensa = paso.jugadores.filter((j) => j.equipo === 'defensa');
@@ -49,6 +58,22 @@ export function BarraSuperior() {
   const f = ataque.filter((j) => j.match === 'F').length;
   // En mixto la línea debe ser 4-3; con menos jugadores o sin género, ningún match pasa de 4.
   const proporcionRara = !proporcionValida(m, f, ataque.length - m - f);
+  const textoProporcion =
+    ataque.length > 0 && m + f === 0
+      ? 'Sin género'
+      : `${m}M-${f}F${ataque.length - m - f > 0 ? ` · ${ataque.length - m - f} s/g` : ''}`;
+  const cambiarVista = (v: Vista) =>
+    cambiar((j) => {
+      j.vista = v;
+    });
+  const cambiarLado = () =>
+    cambiar((j) => {
+      j.lado = j.lado === 'derecha' ? 'izquierda' : 'derecha';
+    });
+  const irACuenta = () => {
+    cerrarMenu();
+    irA(usuario ? '/mis-datos' : '/cuenta');
+  };
 
   const cerrarMenu = () => menu.current?.removeAttribute('open');
   const abrir = (v: Ventana) => {
@@ -91,38 +116,24 @@ export function BarraSuperior() {
         </button>
       </div>
 
-      <div className="segmentado" role="group" aria-label="Vista de la cancha">
+      {/* En el celular, la vista, el lado, la cuadrícula, el roster y la cuenta pasan al menú «⋯». */}
+      <div className="segmentado solo-escritorio" role="group" aria-label="Vista de la cancha">
         {VISTAS.map((v) => (
-          <button
-            key={v.id}
-            aria-pressed={jugada.vista === v.id}
-            onClick={() =>
-              cambiar((j) => {
-                j.vista = v.id;
-              })
-            }
-          >
+          <button key={v.id} aria-pressed={jugada.vista === v.id} onClick={() => cambiarVista(v.id)}>
             {v.nombre}
           </button>
         ))}
       </div>
       {jugada.vista !== 'completa' && (
-        <button
-          className="boton-texto"
-          title="Cambiar de lado"
-          onClick={() =>
-            cambiar((j) => {
-              j.lado = j.lado === 'derecha' ? 'izquierda' : 'derecha';
-            })
-          }
-        >
+        <button className="boton-texto solo-escritorio" title="Cambiar de lado" onClick={cambiarLado}>
           {jugada.lado === 'derecha' ? 'Lado der. ⇄' : '⇄ Lado izq.'}
         </button>
       )}
 
-      <div className="grupo">
+      <div className="grupo solo-escritorio">
         <button
           className="boton-icono"
+          hidden={orientacionAutomatica}
           aria-pressed={jugada.orientacion === 'vertical'}
           title="Rotar cancha"
           aria-label="Rotar cancha"
@@ -146,7 +157,7 @@ export function BarraSuperior() {
       </div>
 
       <button
-        className={`proporcion${proporcionRara ? ' alerta' : ''}`}
+        className={`proporcion solo-escritorio${proporcionRara ? ' alerta' : ''}`}
         title={
           proporcionRara
             ? 'En mixto la línea debe ser 4-3. Toca para abrir el roster.'
@@ -154,23 +165,69 @@ export function BarraSuperior() {
         }
         onClick={() => abrir('roster')}
       >
-        {ataque.length > 0 && m + f === 0
-          ? 'Sin género'
-          : `${m}M-${f}F${ataque.length - m - f > 0 ? ` · ${ataque.length - m - f} s/g` : ''}`}
+        {textoProporcion}
       </button>
 
-      <button className="boton-texto primario" onClick={() => abrir('compartir')} title="Compartir y exportar">
+      <button
+        className="boton-texto primario boton-compartir"
+        onClick={() => abrir('compartir')}
+        title="Compartir y exportar"
+        aria-label="Compartir y exportar"
+      >
         <IconoCompartir />
         <span className="ocultar-movil">Compartir</span>
       </button>
+
+      {hayServidor && (
+        <button
+          className="boton-icono solo-escritorio"
+          onClick={irACuenta}
+          title={usuario ? `Mis datos (${nombreVisible(perfil)})` : 'Ingresar o crear cuenta'}
+          aria-label={usuario ? 'Mis datos' : 'Ingresar o crear cuenta'}
+        >
+          {usuario && perfil ? <span className="avatar-mini">{iniciales(nombreVisible(perfil))}</span> : <IconoUsuario />}
+        </button>
+      )}
 
       <details className="menu" ref={menu}>
         <summary className="boton-icono" aria-label="Más opciones" title="Más opciones">
           <IconoMenu />
         </summary>
         <div className="menu-lista">
+          {hayServidor && (
+            <button className="solo-movil" onClick={irACuenta}>
+              {usuario ? `Mis datos (${nombreVisible(perfil)})` : 'Ingresar o crear cuenta'}
+            </button>
+          )}
+          <div className="menu-fila solo-movil">
+            <span>Vista</span>
+            <div className="segmentado" role="group" aria-label="Vista de la cancha">
+              {VISTAS.map((v) => (
+                <button key={v.id} aria-pressed={jugada.vista === v.id} onClick={() => cambiarVista(v.id)}>
+                  {v.nombre}
+                </button>
+              ))}
+            </div>
+          </div>
+          {jugada.vista !== 'completa' && (
+            <button className="solo-movil" onClick={cambiarLado}>
+              Lado de la cancha <strong>{jugada.lado === 'derecha' ? 'Derecho ⇄' : 'Izquierdo ⇄'}</strong>
+            </button>
+          )}
+          <label className="menu-check solo-movil">
+            <input
+              type="checkbox"
+              checked={prefs.mostrarCuadricula}
+              onChange={(e) => prefs.actualizar({ mostrarCuadricula: e.target.checked })}
+            />
+            Cuadrícula cada 5 m
+          </label>
+          <hr className="solo-movil" />
           <button onClick={() => abrir('detalles')}>Detalles y notas de la jugada…</button>
-          <button onClick={() => abrir('roster')}>Roster del equipo…</button>
+          <button onClick={() => abrir('roster')}>
+            Roster del equipo…
+            <span className={`proporcion${proporcionRara ? ' alerta' : ''}`}>{textoProporcion}</span>
+          </button>
           <button
             onClick={() => {
               nuevaJugada();
@@ -211,12 +268,21 @@ export function BarraSuperior() {
           </label>
           <label className="menu-color">
             Color ataque
-            <input type="color" value={prefs.colorAtaque} onChange={(e) => prefs.actualizar({ colorAtaque: e.target.value })} />
+            <input type="color" aria-label="Color del ataque" value={prefs.colorAtaque} onChange={(e) => prefs.actualizar({ colorAtaque: e.target.value })} />
           </label>
           <label className="menu-color">
             Color defensa
-            <input type="color" value={prefs.colorDefensa} onChange={(e) => prefs.actualizar({ colorDefensa: e.target.value })} />
+            <input type="color" aria-label="Color de la defensa" value={prefs.colorDefensa} onChange={(e) => prefs.actualizar({ colorDefensa: e.target.value })} />
           </label>
+          <hr />
+          <button
+            onClick={() => {
+              cerrarMenu();
+              irA('/legal/terminos');
+            }}
+          >
+            Términos, privacidad y créditos
+          </button>
           {!instalada && (
             <>
               <hr />

@@ -38,6 +38,8 @@ interface EstadoEditor {
   iniciarGesto: () => void;
   moverGesto: (fn: Receta) => void;
   terminarGesto: () => void;
+  /** Deshace lo movido desde iniciarGesto sin dejar rastro en el historial (p. ej. al empezar un zoom). */
+  cancelarGesto: () => void;
 
   deshacer: () => void;
   rehacer: () => void;
@@ -107,6 +109,8 @@ export const useEditor = create<EstadoEditor>((set, get) => ({
         futuro: [],
       };
     }),
+
+  cancelarGesto: () => set((s) => (s.pendiente ? { jugada: s.pendiente, pendiente: null } : {})),
 
   deshacer: () =>
     set((s) => {

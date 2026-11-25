@@ -12,21 +12,23 @@ interface Props {
   radioToque?: number;
   /** Nombre corto que se escribe debajo de la ficha. */
   nombre?: string;
+  /** Agranda la ficha en pantallas pequeñas (1 = tamaño real). */
+  escala?: number;
 }
 
 const r = RADIO_DEFENSA;
 const TRIANGULO = `0,${-r} ${r * 0.866},${r * 0.5} ${-r * 0.866},${r * 0.5}`;
 
-export function JugadorSVG({ j, color, rot, mostrarMatch, seleccionado, radioToque, nombre }: Props) {
+export function JugadorSVG({ j, color, rot, mostrarMatch, seleccionado, radioToque, nombre, escala = 1 }: Props) {
   const tam = j.etiqueta.length > 2 ? 0.72 : j.etiqueta.length > 1 ? 0.85 : 1;
   const esAtaque = j.equipo === 'ataque';
   return (
     <g transform={`translate(${j.x} ${j.y})`} data-tipo="jugador" data-id={j.id} className="elemento">
       {radioToque && <circle r={radioToque} fill="transparent" />}
       {seleccionado && (
-        <circle r={(esAtaque ? RADIO_JUGADOR : RADIO_DEFENSA) + 0.45} fill="none" stroke={COLORES.seleccion} strokeWidth={0.25} />
+        <circle r={(esAtaque ? RADIO_JUGADOR : RADIO_DEFENSA) * escala + 0.45} fill="none" stroke={COLORES.seleccion} strokeWidth={0.25} />
       )}
-      <g transform={rot}>
+      <g transform={escala !== 1 ? `${rot ?? ''} scale(${escala})` : rot}>
         {esAtaque ? (
           <>
             <circle r={RADIO_JUGADOR} fill={color} stroke="#FFFFFF" strokeWidth={0.18} />

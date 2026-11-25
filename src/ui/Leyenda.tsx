@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { usePreferencias } from '../estado/preferencias';
+import { PANTALLA_ANGOSTA } from '../estado/pantalla';
 import { useEditor } from '../estado/editorStore';
 import { COLORES } from '../estilos/colores';
 import { ESTILO_FLECHA } from '../cancha/FlechaSVG';
@@ -14,11 +16,28 @@ function Linea({ color, tipo }: { color: string; tipo: keyof typeof ESTILO_FLECH
   );
 }
 
-export function Leyenda() {
+/** `plegable`: en el editor se puede cerrar; en el celular empieza cerrada para no tapar la cancha. */
+export function Leyenda({ plegable = false }: { plegable?: boolean }) {
   const prefs = usePreferencias();
+  const [abierta, setAbierta] = useState(() => !plegable || !window.matchMedia?.(PANTALLA_ANGOSTA).matches);
   if (!prefs.mostrarLeyenda) return null;
+  if (!abierta) {
+    return (
+      <button className="leyenda leyenda-cerrada" onClick={() => setAbierta(true)} aria-expanded="false" aria-label="Mostrar leyenda">
+        <svg viewBox="-1.5 -1.5 3 3" width="14" height="14" aria-hidden="true">
+          <circle r="1.1" fill={prefs.colorAtaque} stroke="#fff" strokeWidth="0.18" />
+        </svg>
+        Leyenda
+      </button>
+    );
+  }
   return (
-    <div className="leyenda" aria-label="Leyenda">
+    <div className={`leyenda${plegable ? ' plegable' : ''}`} aria-label="Leyenda">
+      {plegable && (
+        <button className="leyenda-cerrar" onClick={() => setAbierta(false)} aria-expanded="true" aria-label="Ocultar leyenda">
+          ×
+        </button>
+      )}
       <div>
         <svg viewBox="-1.5 -1.5 3 3" width="16" height="16" aria-hidden="true">
           <circle r="1.1" fill={prefs.colorAtaque} stroke="#fff" strokeWidth="0.18" />

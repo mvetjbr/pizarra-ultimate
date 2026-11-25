@@ -40,6 +40,11 @@
   flex-shrink: 0;
 }
 
+.lt-mover {
+  display: flex;
+  gap: 4px;
+}
+
 .velocidad button {
   min-width: 44px;
   padding: 0 8px;
@@ -213,17 +218,34 @@
 
 /* ---------- Celular ---------- */
 @media (max-width: 760px) {
+  /*
+   * Dos filas en vez de tres:
+   * 1) anterior · reproducir · siguiente · velocidad | duplicar · borrar · presentar
+   * 2) miniaturas de los pasos · + Paso | mover paso ← →
+   */
   .linea-tiempo {
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 6px 4px;
     padding: 6px;
   }
-  .lt-miniaturas {
-    order: 3;
-    flex-basis: 100%;
+  .lt-acciones {
+    display: contents;
   }
   .controles-reproduccion {
+    order: 1;
     flex: 1 1 auto;
+  }
+  .linea-tiempo .velocidad {
+    display: none;
+  }
+  .linea-tiempo .velocidad-ciclo {
+    display: inline-grid !important;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .lt-acciones > .boton-icono,
+  .lt-acciones > .boton-texto {
+    order: 1;
   }
   .lt-acciones .boton-texto span {
     display: none;
@@ -231,9 +253,16 @@
   .lt-acciones .boton-texto {
     padding: 0 10px;
   }
+  .lt-miniaturas {
+    order: 2;
+    flex: 1 1 200px;
+  }
+  .lt-mover {
+    order: 3;
+  }
   .miniatura {
     width: 88px;
-    height: 40px;
+    height: 44px;
   }
   .boton-pres {
     min-height: 56px;

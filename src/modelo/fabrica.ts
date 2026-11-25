@@ -35,7 +35,8 @@ const POS_ATAQUE: Punto[] = [30, 40, 45, 50, 55, 60, 65].map((x) => ({ x, y: Y }
 export function posicionBase(equipo: Equipo, numero: number): Punto {
   const p = POS_ATAQUE[Math.min(Math.max(numero, 1), 7) - 1];
   if (equipo === 'ataque') return { ...p };
-  return numero === 1 ? { x: p.x + 1.5, y: p.y - 2.2 } : { x: p.x + 1.8, y: p.y + 2.2 };
+  // Separadas lo suficiente para que el triángulo no tape la ficha del atacante.
+  return numero === 1 ? { x: p.x + 1.5, y: p.y - 3.4 } : { x: p.x + 1.8, y: p.y + 3.4 };
 }
 
 export function crearJugador(equipo: Equipo, numero: number, proporcion: Proporcion): Player {

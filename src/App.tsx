@@ -115,7 +115,7 @@ export default function App() {
         <div className="columna">
           <main className="lienzo">
             <Pizarra />
-            <Leyenda />
+            <Leyenda plegable />
             <Conteo />
             <Ayuda />
             <PanelPropiedades />
