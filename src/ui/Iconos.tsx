@@ -68,6 +68,13 @@ export const IconoRehacer = () => (
     <path d="M20 9H9.5a5.5 5.5 0 000 11H13" />
   </Icono>
 );
+/** Muñequito: abre Formación y jugadores. */
+export const IconoJugadores = () => (
+  <Icono>
+    <circle cx="12" cy="5" r="2.2" />
+    <path d="M12 8v6M7 10.5l5-1.5 5 1.5M12 14l-3.5 6M12 14l3.5 6" />
+  </Icono>
+);
 export const IconoRotar = () => (
   <Icono>
     <path d="M21 12a9 9 0 11-3-6.7" />

@@ -70,7 +70,7 @@ function SelectorCarpeta({ j, carpetas }: { j: Play; carpetas: string[] }) {
       onChange={(e) => {
         let destino: string | undefined = e.target.value || undefined;
         if (destino === NUEVA) {
-          const n = window.prompt('Nombre de la carpeta nueva');
+          const n = window.prompt('Nombre de la carpeta nueva (puedes empezar con un emoji como ícono)');
           destino = n ? (crearCarpeta(n) ?? undefined) : j.carpeta;
           if (!n) return;
         }
@@ -78,10 +78,10 @@ function SelectorCarpeta({ j, carpetas }: { j: Play; carpetas: string[] }) {
         avisar(destino ? `"${j.nombre}" está en la carpeta ${destino}` : `"${j.nombre}" quedó sin carpeta`);
       }}
     >
-      <option value="">📁 Sin carpeta</option>
+      <option value="">Sin carpeta</option>
       {carpetas.map((c) => (
         <option key={c} value={c}>
-          📁 {c}
+          {c}
         </option>
       ))}
       <option value={NUEVA}>+ Carpeta nueva…</option>
@@ -107,7 +107,7 @@ function TarjetaJugada({
         <div className="tarjeta-info">
           <strong>{j.nombre}</strong>
           <span className="tarjeta-meta">
-            {j.carpeta ? `📁 ${j.carpeta} · ` : ''}
+            {j.carpeta ? `${j.carpeta} · ` : ''}
             {j.pasos.length} {j.pasos.length === 1 ? 'paso' : 'pasos'} · {fecha(j.editada)}
             {actual && ' · abierta'}
           </span>
@@ -296,7 +296,7 @@ export function Biblioteca({ alCerrar }: { alCerrar: () => void }) {
             </button>
             {carpetas.map((c) => (
               <button key={c} className="chip" aria-pressed={carpeta === c} onClick={() => setCarpeta(c)}>
-                📁 {c} ({cuantas(c)})
+                {c} ({cuantas(c)})
               </button>
             ))}
             {carpetas.length > 0 && cuantas(SIN_CARPETA) > 0 && (
@@ -309,11 +309,11 @@ export function Biblioteca({ alCerrar }: { alCerrar: () => void }) {
               aria-label="Crear carpeta"
               title="Crear carpeta"
               onClick={() => {
-                const n = window.prompt('Nombre de la carpeta (ej. "Zona 3-3-1", "Salidas de pull")');
+                const n = window.prompt('Nombre de la carpeta. Puedes empezar con el emoji que quieras como ícono, ej. "🔥 Zona 3-3-1" o "🥏 Salidas de pull"');
                 const c = n ? crearCarpeta(n) : null;
                 if (c) {
                   setCarpeta(c);
-                  avisar(`Carpeta "${c}" creada. Usa "📁" en cada jugada para meterla aquí.`);
+                  avisar(`Carpeta "${c}" creada. Usa el selector de carpeta de cada jugada para meterla aquí.`);
                 }
               }}
             >
@@ -326,7 +326,7 @@ export function Biblioteca({ alCerrar }: { alCerrar: () => void }) {
             <button
               className="boton-texto"
               onClick={() => {
-                const n = window.prompt('Nuevo nombre de la carpeta', enCarpeta);
+                const n = window.prompt('Nuevo nombre de la carpeta (el emoji del inicio es su ícono)', enCarpeta);
                 const c = n ? renombrarCarpeta(enCarpeta, n) : null;
                 if (c) setCarpeta(c);
               }}
@@ -357,7 +357,7 @@ export function Biblioteca({ alCerrar }: { alCerrar: () => void }) {
         ) : (
           <p className="vacio">
             {enCarpeta && !q
-              ? 'Esta carpeta está vacía. Crea una jugada nueva aquí, o en «Todas» usa el selector 📁 de una jugada para moverla.'
+              ? 'Esta carpeta está vacía. Crea una jugada nueva aquí, o en «Todas» usa el selector de carpeta de una jugada para moverla.'
               : 'No hay jugadas que coincidan. Prueba con otra búsqueda o empieza desde una plantilla.'}
           </p>
         )

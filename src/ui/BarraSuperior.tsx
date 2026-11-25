@@ -18,7 +18,7 @@ import {
   IconoDeshacer,
   IconoMenu,
   IconoRehacer,
-  IconoRotar,
+  IconoJugadores,
   IconoUsuario,
 } from './Iconos';
 import { Biblioteca } from './Biblioteca';
@@ -170,21 +170,17 @@ export function BarraSuperior() {
         </button>
       )}
 
+      {/* Formación y jugadores (también en el celular). Girar la cancha quedó en el menú «⋯». */}
+      <button
+        className="boton-icono"
+        title="Formación y jugadores"
+        aria-label="Formación y jugadores"
+        onClick={() => abrir('jugadores')}
+      >
+        <IconoJugadores />
+      </button>
+
       <div className="grupo solo-escritorio">
-        <button
-          className="boton-icono"
-          hidden={orientacionAutomatica}
-          aria-pressed={jugada.orientacion === 'vertical'}
-          title="Rotar cancha"
-          aria-label="Rotar cancha"
-          onClick={() =>
-            cambiar((j) => {
-              j.orientacion = j.orientacion === 'horizontal' ? 'vertical' : 'horizontal';
-            })
-          }
-        >
-          <IconoRotar />
-        </button>
         <button
           className="boton-icono"
           aria-pressed={prefs.mostrarCuadricula}
@@ -286,6 +282,18 @@ export function BarraSuperior() {
               }}
             >
               Administración
+            </button>
+          )}
+          {!orientacionAutomatica && (
+            <button
+              onClick={() => {
+                cerrarMenu();
+                cambiar((j) => {
+                  j.orientacion = j.orientacion === 'horizontal' ? 'vertical' : 'horizontal';
+                });
+              }}
+            >
+              Girar la cancha ({jugada.orientacion === 'horizontal' ? 'ponerla vertical' : 'ponerla horizontal'})
             </button>
           )}
           <button onClick={() => abrir('detalles')}>Detalles y notas de la jugada…</button>
