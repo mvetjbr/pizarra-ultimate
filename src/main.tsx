@@ -6,6 +6,7 @@ import './estado/instalacion';
 import { iniciarSesionNube } from './nube/sesion';
 import { iniciarSincronizacion } from './nube/jugadas';
 import { iniciarGuardadoCompartidas } from './nube/compartir';
+import { iniciarMascotaEnCuenta } from './nube/mascota';
 import { iniciarTemas } from './temas';
 import './estilos/app.css';
 import './estilos/pasos.css';
@@ -23,6 +24,8 @@ void iniciarPersistencia().then(() => {
   // La sincronización arranca cuando la biblioteca local ya está cargada.
   iniciarSincronizacion();
   iniciarGuardadoCompartidas();
+  iniciarMascotaEnCuenta(); // después de leer las preferencias, para que no las pise el guardado local
+
 });
 void iniciarSesionNube();
 

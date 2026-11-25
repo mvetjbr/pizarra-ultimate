@@ -46,7 +46,7 @@ await db.exec(`
 `);
 
 console.log('1) Migraciones');
-for (const f of ['20261111000100_cuentas_y_legal.sql', '20261111000200_documentos_legales.sql']) {
+for (const f of ['20261111000100_cuentas_y_legal.sql', '20261111000200_documentos_legales.sql', '20261126000100_mascota_en_perfil.sql']) {
   try {
     await db.exec(readFileSync(MIG + f, 'utf8'));
     bien(f);
@@ -106,6 +106,13 @@ await debeFallar('no puede cambiar su fecha de nacimiento', `update profiles set
 await debeFallar('no puede volverse administradora', `update profiles set es_admin = true where id = '${A}'`);
 const otro = await db.query(`update profiles set apodo = 'x' where id = $1`, [B]);
 otro.affectedRows === 0 ? bien('no puede tocar el perfil de otra persona (0 filas)') : mal('modificó otro perfil');
+await db.query(`update profiles set muneco = 'vikingo', mascotas_elegidas = '{jaguar,toro}' where id = $1`, [A]);
+const masc = (await db.query(`select muneco, mascotas_elegidas from profiles where id = $1`, [A])).rows[0];
+masc.muneco === 'vikingo' && masc.mascotas_elegidas.join(',') === 'jaguar,toro' ? bien('puede guardar su mascota y las desbloqueadas') : mal('mascota: ' + JSON.stringify(masc));
+await debeFallar('rechaza un nombre de mascota raro', `update profiles set muneco = '<script>' where id = '${A}'`);
+await debeFallar('rechaza mascotas desbloqueadas raras', `update profiles set mascotas_elegidas = '{"a b"}' where id = '${A}'`);
+const otraMasc = await db.query(`update profiles set muneco = 'toro' where id = $1`, [B]);
+otraMasc.affectedRows === 0 ? bien('no puede cambiar la mascota de otra persona (0 filas)') : mal('cambió la mascota de otro');
 (await db.query(`select * from consent_records`)).rows.every((r) => r.user_id === A) ? bien('solo ve sus consentimientos') : mal('ve consentimientos ajenos');
 await debeFallar('no puede insertar consentimientos directamente', `insert into consent_records (user_id, actor, document_type, document_version, document_hash, action, checkbox_text, method) values ('${A}','titular','terminos','${vig.terminos.version}','${vig.terminos.hash}','aceptado','x','x')`);
 const pend = (await db.query(`select * from documentos_pendientes()`)).rows;

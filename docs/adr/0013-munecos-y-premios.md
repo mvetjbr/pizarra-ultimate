@@ -28,7 +28,7 @@ El conteo de 10 muestra un muñeco sobre la cancha. Al principio había 8 muñec
 
 ## Consecuencias
 - Es un juego local, no una medida de seguridad. Quien edite IndexedDB puede desbloquear todo, y no importa.
-- Los premios no viajan a la nube ni a otros dispositivos. Si algún día se sincronizan, hará falta un ADR nuevo.
+- Los premios no viajan a la nube ni a otros dispositivos. Si algún día se sincronizan, hará falta un ADR nuevo. (Actualización: desde el [ADR 0014](0014-mascota-en-la-cuenta.md), con sesión iniciada la mascota y las desbloqueadas viajan con la cuenta.)
 - Para agregar un muñeco:
   1. Se dibuja en `munecosSvg.ts` con las reglas de arriba.
   2. Se suma a `MUNECOS_BASICOS` o a `MASCOTAS`.

@@ -12,6 +12,9 @@ export interface Perfil {
   rol: 'handler' | 'cutter' | 'ambos' | null;
   match_categoria: 'MMP' | 'FMP' | 'no_dice' | null;
   foto_url: string | null;
+  /** Mascota elegida y mascotas desbloqueadas (pueden faltar si la base aún no tiene las columnas). */
+  muneco?: string | null;
+  mascotas_elegidas?: string[] | null;
   es_menor: boolean;
   estado: 'activa' | 'pendiente_representante';
   es_admin: boolean;
