@@ -82,6 +82,26 @@ Variables: `--fuente-titulo: 'Shrikhand', 'Work Sans', system-ui, sans-serif;` y
 - **Estado activo / elegido:** fondo `--petroleo` con texto `--crema`. Si el bloque es claro, fondo `--mostaza` con texto `--tinta`.
 - **Foco del teclado:** contorno de 3 px en `--coral` con 2 px de separación.
 
+## Tamaños (densidad compacta: la cancha manda)
+
+La cancha es lo principal, así que los controles se hacen pequeños para dejarle espacio.
+
+**Controles:**
+- Botones e íconos de `--toque: 38px`, con el ícono a 20 px.
+- Sombra de los controles de 2 px (`--sombra: 2px 2px 0 var(--tinta)`).
+- Texto de botones a 0,85–0,9 rem.
+
+**Barras:**
+- Herramientas de 46 px de alto (42 en el celular) con etiqueta de 0,7 rem.
+- Barras superior e inferior con relleno de 4 px.
+- Miniaturas de pasos de 76 × 36.
+
+**Biblioteca y ventanas:**
+- Pestañas a 0,85 rem, chips de 30 px a 0,8 rem.
+- En las tarjetas, la cancha va a todo el ancho (también en el celular), el nombre a 0,88 rem, los datos a 0,72 rem y los botones de 30–32 px.
+
+Antes de agrandar un control, pregúntate si le quita espacio a la cancha.
+
 ## Íconos
 
 Siguen la regla del Estilo Orgánico, recoloreada con los acentos de este estilo:

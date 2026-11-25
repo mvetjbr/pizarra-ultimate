@@ -363,3 +363,153 @@ button:disabled .icono-circulo {
   background: var(--crema-2);
   border-bottom: var(--borde-grueso);
 }
+
+/* ---------- Densidad compacta: más cancha, controles más pequeños (DESIGN.md › Tamaños) ---------- */
+:root {
+  --toque: 38px;
+  --sombra: 2px 2px 0 var(--tinta);
+}
+.barra-superior {
+  gap: 6px;
+  padding: 4px 8px;
+  padding-top: max(4px, env(safe-area-inset-top));
+}
+.nombre-jugada {
+  font-size: 0.95rem;
+}
+.boton-icono svg.icono,
+.boton-texto svg.icono,
+.boton-herramienta svg.icono {
+  width: 20px;
+  height: 20px;
+}
+.boton-texto {
+  padding: 0 10px;
+  font-size: 0.88rem;
+}
+.segmentado button {
+  padding: 0 9px;
+  font-size: 0.85rem;
+}
+.proporcion {
+  padding: 3px 9px;
+  font-size: 0.82rem;
+}
+.herramientas {
+  gap: 2px;
+  padding: 6px 4px;
+}
+.boton-herramienta {
+  min-width: 58px;
+  min-height: 46px;
+  padding: 2px;
+  font-size: 0.7rem;
+}
+.linea-tiempo {
+  gap: 8px;
+  padding: 4px 8px;
+}
+.velocidad button {
+  min-width: 36px;
+  padding: 0 6px;
+}
+.miniatura {
+  width: 76px;
+  height: 36px;
+}
+.leyenda {
+  padding: 4px 8px;
+  font-size: 0.72rem;
+}
+
+/* Biblioteca y ventanas: letreros pequeños, la cancha de cada tarjeta manda */
+.dialogo-cabecera {
+  padding: 8px 10px 6px 16px;
+}
+.dialogo-cabecera h2 {
+  font-size: 1.15rem;
+}
+.dialogo-pie .boton-texto {
+  font-size: 0.85rem;
+}
+.pestanas button {
+  min-height: 34px;
+  padding: 0 10px;
+  font-size: 0.85rem;
+}
+.buscador {
+  min-height: 36px;
+  font-size: 0.9rem;
+}
+.chip {
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: 0.8rem;
+}
+.lista-tarjetas {
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+}
+.tarjeta-info {
+  gap: 2px;
+  padding: 6px 10px 2px;
+}
+.tarjeta-info strong {
+  font-size: 0.88rem;
+}
+.tarjeta-meta {
+  font-size: 0.72rem;
+}
+.tarjeta-acciones {
+  gap: 4px;
+  padding: 4px 10px 10px;
+}
+.tarjeta-acciones .boton-texto {
+  flex: 1 1 auto;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 8px;
+  font-size: 0.78rem;
+}
+.selector-carpeta {
+  min-height: 30px;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 760px) {
+  .barra-superior {
+    gap: 4px;
+    padding: 4px 6px;
+  }
+  .boton-herramienta {
+    min-height: 42px;
+    font-size: 0.62rem;
+  }
+  .linea-tiempo {
+    padding: 4px 6px;
+  }
+  .miniatura {
+    width: 72px;
+    height: 38px;
+  }
+  /* Tarjeta en el celular: la cancha arriba a todo el ancho, datos y botones compactos debajo */
+  .tarjeta-principal {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+  }
+  .tarjeta-principal .tarjeta-svg {
+    flex: none;
+    width: 100%;
+    border-radius: 0;
+  }
+  .tarjeta-info {
+    padding: 6px 10px 2px;
+  }
+  .tarjeta-acciones {
+    padding: 4px 8px 8px;
+  }
+  .tarjeta-acciones .boton-texto {
+    min-height: 32px;
+  }
+}
