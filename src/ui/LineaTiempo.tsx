@@ -46,7 +46,9 @@ const Miniatura = memo(function Miniatura({
       aria-current={activa ? 'step' : undefined}
     >
       <CanchaEstatica paso={paso} vista={vista} lado={lado} orientacion="horizontal" className="miniatura-svg" sinNombres />
-      <span className="miniatura-num">{numero}</span>
+      <span className="miniatura-num" data-num2={String(numero).padStart(2, '0')}>
+        {numero}
+      </span>
     </button>
   );
 });

@@ -100,16 +100,16 @@ small.error {
   font-weight: 700;
 }
 .etiqueta-permiso.ver {
-  background: #e8eefc;
-  color: #1e4fd8;
+  background: var(--superficie-2);
+  color: var(--texto);
 }
 .etiqueta-estado.recibido,
 .etiqueta-estado.recibida {
-  background: #fff4d6;
-  color: #7a5200;
+  background: var(--resalte);
+  color: var(--sobre-resalte);
 }
 .etiqueta-estado.retirado {
-  background: #fdecea;
+  background: var(--superficie-2);
   color: var(--peligro);
 }
 
@@ -179,8 +179,8 @@ small.error {
   align-items: center;
   gap: 6px 10px;
   padding: 6px 10px;
-  background: #e8eefc;
-  border-bottom: 1px solid #b9c8f3;
+  background: var(--resalte);
+  border-bottom: 1px solid var(--borde);
   font-size: 0.9rem;
 }
 .banner-compartida span {

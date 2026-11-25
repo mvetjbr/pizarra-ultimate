@@ -122,8 +122,8 @@
 .conteo-pastilla {
   padding: 1px 7px;
   border-radius: 99px;
-  background: rgba(0, 0, 0, 0.72);
-  color: #fff;
+  background: var(--capa);
+  color: var(--sobre-capa);
   font-size: 10px;
   font-weight: 700;
   white-space: nowrap;

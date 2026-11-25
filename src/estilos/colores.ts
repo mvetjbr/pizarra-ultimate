@@ -1,16 +1,7 @@
-// Colores de la cancha (SVG y exportaciones). Reflejan las variables de DESIGN.md:
-// --cesped, --cesped-zona, --linea-cancha, --mostaza (ataque) y --coral (defensa).
+// Los colores de la cancha, los jugadores y las flechas los pone el tema activo (src/temas).
+// Aquí quedan solo los que son iguales en todos los temas: la insignia de match y los colores
+// que la persona elige para sus zonas (son datos de la jugada, no apariencia).
 export const COLORES = {
-  cesped: '#3F7F5E',
-  zonaAnotacion: '#356B50',
-  lineas: '#F5EAD3',
-  ataque: '#DCA43A',
-  defensa: '#E6785E',
-  disco: '#FFFFFF',
-  bordeDisco: '#8A8A8A',
-  pase: '#FFFFFF',
-  movDefensa: '#E6785E',
-  seleccion: '#00E5FF',
   matchM: '#5B2A86',
   matchF: '#C2185B',
 } as const;

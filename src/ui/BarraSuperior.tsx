@@ -27,6 +27,7 @@ import { Compartir } from './Compartir';
 import { Roster } from './Roster';
 import { Jugadores } from './Jugadores';
 import { AjustesConteo } from '../conteo/AjustesConteo';
+import { Estilos } from './Estilos';
 import { proporcionValida } from '../estado/jugadores';
 import { useOrientacionAutomatica } from '../estado/pantalla';
 import { encuadrar } from '../modelo/encuadre';
@@ -133,6 +134,17 @@ export function BarraSuperior() {
         <IconoBiblioteca />
       </button>
 
+      {/* Decoración del estilo Electronic (ecualizador y "TRACK 01"); en los demás no se ve. */}
+      <span className="deco-track" aria-hidden="true">
+        <span className="deco-eq">
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+        </span>
+        TRACK 01
+      </span>
       <input
         className="nombre-jugada"
         aria-label="Nombre de la jugada"
@@ -172,7 +184,7 @@ export function BarraSuperior() {
 
       {/* Formación y jugadores (también en el celular). Girar la cancha quedó en el menú «⋯». */}
       <button
-        className="boton-icono"
+        className="boton-icono boton-jugadores"
         title="Formación y jugadores"
         aria-label="Formación y jugadores"
         onClick={() => abrir('jugadores')}
@@ -310,6 +322,7 @@ export function BarraSuperior() {
             Nueva jugada en blanco
           </button>
           <hr />
+          <button onClick={() => abrir('estilos')}>Estilos…</button>
           <button onClick={() => abrir('conteo')}>Conteo de 10…</button>
           <button onClick={() => abrir('jugadores')}>
             Formación y jugadores… ({ataque.length} vs {defensa.length})
@@ -338,14 +351,6 @@ export function BarraSuperior() {
               onChange={(e) => prefs.actualizar({ mostrarLeyenda: e.target.checked })}
             />
             Mostrar leyenda
-          </label>
-          <label className="menu-color">
-            Color ataque
-            <input type="color" aria-label="Color del ataque" value={prefs.colorAtaque} onChange={(e) => prefs.actualizar({ colorAtaque: e.target.value })} />
-          </label>
-          <label className="menu-color">
-            Color defensa
-            <input type="color" aria-label="Color de la defensa" value={prefs.colorDefensa} onChange={(e) => prefs.actualizar({ colorDefensa: e.target.value })} />
           </label>
           <hr />
           <button
@@ -380,6 +385,7 @@ export function BarraSuperior() {
       {ventana === 'roster' && <Roster alCerrar={cerrar} />}
       {ventana === 'jugadores' && <Jugadores alCerrar={cerrar} />}
       {ventana === 'conteo' && <AjustesConteo alCerrar={cerrar} />}
+      {ventana === 'estilos' && <Estilos alCerrar={cerrar} />}
     </header>
   );
 }

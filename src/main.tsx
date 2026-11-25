@@ -6,14 +6,18 @@ import './estado/instalacion';
 import { iniciarSesionNube } from './nube/sesion';
 import { iniciarSincronizacion } from './nube/jugadas';
 import { iniciarGuardadoCompartidas } from './nube/compartir';
+import { iniciarTemas } from './temas';
 import './estilos/app.css';
 import './estilos/pasos.css';
 import './estilos/biblioteca.css';
 import './estilos/conteo.css';
 import './estilos/cuenta.css';
 import './estilos/nube.css';
-import './estilos/vintage.css'; // tema de DESIGN.md: siempre el último
+import './estilos/tema.css'; // apariencia según el tema activo
+import './estilos/temas-deco.css'; // decoraciones propias de cada tema: siempre el último
 
+// El estilo elegido se aplica antes de dibujar para que no se vea un parpadeo de otro tema.
+iniciarTemas();
 void iniciarPersistencia().then(() => {
   // La sincronización arranca cuando la biblioteca local ya está cargada.
   iniciarSincronizacion();

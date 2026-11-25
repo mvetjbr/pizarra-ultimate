@@ -10,6 +10,7 @@ import { jsonDeJugadas } from '../exportar/json';
 import type { Contexto } from '../exportar/imagen';
 import { Dialogo } from './Dialogo';
 import { PanelCompartir } from './PanelCompartir';
+import { temaActivo } from '../temas';
 import { useSesion } from '../nube/sesion';
 import { irA } from '../estado/ruta';
 import { hayServidor } from '../nube/cliente';
@@ -30,6 +31,7 @@ function contextoActual(): Contexto {
     prefs: extraerPreferencias(usePreferencias.getState()),
     miembros: useRoster.getState().miembros,
     orientacion: jugada.orientacion,
+    tema: temaActivo(),
   };
 }
 

@@ -2,16 +2,28 @@ import { useState } from 'react';
 import { usePreferencias } from '../estado/preferencias';
 import { PANTALLA_ANGOSTA } from '../estado/pantalla';
 import { useEditor } from '../estado/editorStore';
-import { COLORES } from '../estilos/colores';
-import { ESTILO_FLECHA } from '../cancha/FlechaSVG';
+import { colorFlecha, ESTILO_FLECHA } from '../cancha/FlechaSVG';
+import { FormaJugadorSVG } from '../cancha/JugadorSVG';
+import { useTema, type EstiloJugador } from '../temas';
 import { HERRAMIENTAS } from './BarraHerramientas';
 
-function Linea({ color, tipo }: { color: string; tipo: keyof typeof ESTILO_FLECHA }) {
+function Linea({ color, tipo, fondo }: { color: string; tipo: keyof typeof ESTILO_FLECHA; fondo: string }) {
   const e = ESTILO_FLECHA[tipo];
   return (
-    <svg viewBox="0 0 8 2" width="40" height="10" aria-hidden="true">
+    <svg viewBox="-0.4 -0.4 8.8 2.8" width="40" height="13" aria-hidden="true">
+      <rect x="-0.4" y="-0.4" width="8.8" height="2.8" rx="0.5" fill={fondo} />
       <path d="M0 1H6" stroke={color} strokeWidth={e.ancho} strokeDasharray={e.guiones} strokeLinecap={e.extremo} />
       <polygon points="8,1 6.2,0.3 6.2,1.7" fill={color} />
+    </svg>
+  );
+}
+
+/** La forma real del jugador en el tema, sobre un cuadrito del color de la cancha. */
+function Muestra({ estilo, cesped }: { estilo: EstiloJugador; cesped: string }) {
+  return (
+    <svg viewBox="-2 -2 4 4" width="18" height="18" aria-hidden="true" className="muestra-leyenda">
+      <rect x="-2" y="-2" width="4" height="4" rx="0.8" fill={cesped} />
+      <FormaJugadorSVG estilo={estilo} />
     </svg>
   );
 }
@@ -19,14 +31,13 @@ function Linea({ color, tipo }: { color: string; tipo: keyof typeof ESTILO_FLECH
 /** `plegable`: en el editor se puede cerrar; en el celular empieza cerrada para no tapar la cancha. */
 export function Leyenda({ plegable = false }: { plegable?: boolean }) {
   const prefs = usePreferencias();
+  const tema = useTema((s) => s.tema);
   const [abierta, setAbierta] = useState(() => !plegable || !window.matchMedia?.(PANTALLA_ANGOSTA).matches);
   if (!prefs.mostrarLeyenda) return null;
   if (!abierta) {
     return (
       <button className="leyenda leyenda-cerrada" onClick={() => setAbierta(true)} aria-expanded="false" aria-label="Mostrar leyenda">
-        <svg viewBox="-1.5 -1.5 3 3" width="14" height="14" aria-hidden="true">
-          <circle r="1.1" fill={prefs.colorAtaque} stroke="#fff" strokeWidth="0.18" />
-        </svg>
+        <Muestra estilo={tema.ataque} cesped={tema.cancha.cesped} />
         Leyenda
       </button>
     );
@@ -39,25 +50,21 @@ export function Leyenda({ plegable = false }: { plegable?: boolean }) {
         </button>
       )}
       <div>
-        <svg viewBox="-1.5 -1.5 3 3" width="16" height="16" aria-hidden="true">
-          <circle r="1.1" fill={prefs.colorAtaque} stroke="#fff" strokeWidth="0.18" />
-        </svg>
+        <Muestra estilo={tema.ataque} cesped={tema.cancha.cesped} />
         Ataque
       </div>
       <div>
-        <svg viewBox="-1.7 -1.7 3.4 3.4" width="16" height="16" aria-hidden="true">
-          <polygon points="0,-1.4 1.2,0.7 -1.2,0.7" fill="#fff" stroke={prefs.colorDefensa} strokeWidth="0.32" />
-        </svg>
+        <Muestra estilo={tema.defensa} cesped={tema.cancha.cesped} />
         Defensa
       </div>
       <div>
-        <Linea color={prefs.colorAtaque} tipo="corte" /> Corte
+        <Linea color={colorFlecha(tema, 'corte')} tipo="corte" fondo={tema.cancha.cesped} /> Corte
       </div>
       <div>
-        <Linea color={COLORES.pase} tipo="pase" /> Pase
+        <Linea color={colorFlecha(tema, 'pase')} tipo="pase" fondo={tema.cancha.cesped} /> Pase
       </div>
       <div>
-        <Linea color={COLORES.movDefensa} tipo="defensa" /> Mov. defensivo
+        <Linea color={colorFlecha(tema, 'defensa')} tipo="defensa" fondo={tema.cancha.cesped} /> Mov. defensivo
       </div>
     </div>
   );

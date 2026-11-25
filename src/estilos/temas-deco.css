@@ -1,0 +1,429 @@
+/*
+ * Lo propio de cada estilo (además de sus variables): decoraciones, formas de botones y barras.
+ * Solo aplica con <html data-tema="…">. Los colores salen de las variables del tema.
+ */
+
+/* Ventana Estilos (todos los temas) */
+.lista-temas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+.tarjeta-tema {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px;
+  border: var(--borde-grueso);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  color: var(--texto);
+  text-align: left;
+  box-shadow: var(--sombra);
+}
+.tarjeta-tema.activa {
+  outline: 3px solid var(--acento);
+  outline-offset: 2px;
+}
+.miniatura-tema {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--radio) / 2);
+}
+.tarjeta-tema-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tarjeta-tema-texto strong {
+  font-family: var(--fuente-titulo);
+  font-weight: var(--peso-titulo);
+  text-transform: var(--mayus-titulo);
+}
+.tarjeta-tema-texto small {
+  color: var(--texto-suave);
+}
+.tarjeta-tema-marca {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 2px 8px;
+  border-radius: var(--radio-chip);
+  background: var(--primario);
+  color: var(--sobre-primario);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Etiquetas en mayúsculas cuando el tema lo pide */
+.boton-herramienta span,
+.pestanas button,
+.chip,
+.tarjeta-meta {
+  text-transform: var(--mayus-etiqueta);
+  letter-spacing: var(--espaciado-etiqueta);
+}
+
+/* La decoración de Electronic no se ve en los demás temas */
+.deco-track {
+  display: none;
+}
+
+/* =========================================================================
+   MINIMALISTA · blanco, negro y un solo rojo
+   ========================================================================= */
+[data-tema='minimalista'] .boton-icono,
+[data-tema='minimalista'] .boton-texto:not(.primario) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+[data-tema='minimalista'] .boton-icono[aria-pressed='true'] {
+  border-color: var(--borde);
+}
+[data-tema='minimalista'] .barra-superior,
+[data-tema='minimalista'] .herramientas,
+[data-tema='minimalista'] .linea-tiempo {
+  background: var(--superficie);
+}
+[data-tema='minimalista'] .boton-herramienta.activa {
+  position: relative;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  color: var(--acento);
+}
+[data-tema='minimalista'] .boton-herramienta.activa::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 6px;
+  right: 6px;
+  height: 3px;
+  background: var(--acento);
+}
+/* Reproducir: cuadrado negro con ícono blanco */
+[data-tema='minimalista'] .controles-reproduccion .primario {
+  border-color: var(--primario);
+  background: var(--primario);
+  color: var(--sobre-primario);
+}
+/* "Presentar" es uno de los tres usos del rojo */
+[data-tema='minimalista'] .lt-acciones .boton-texto.primario {
+  border-color: var(--acento);
+  background: var(--acento);
+  color: #ffffff;
+}
+[data-tema='minimalista'] .dialogo-cabecera {
+  border-bottom: var(--separador);
+}
+
+/* =========================================================================
+   ORGÁNICO · tonos tierra y formas redondas
+   ========================================================================= */
+/* La cancha va dentro de un panel salvia con dos círculos que salen por las esquinas */
+[data-tema='organico'] .lienzo {
+  padding: 12px;
+  background: var(--fondo);
+}
+[data-tema='organico'] .lienzo::before,
+[data-tema='organico'] .lienzo::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  background: #6d8c65;
+  pointer-events: none;
+}
+[data-tema='organico'] .lienzo::before {
+  top: -40px;
+  left: -40px;
+  width: 160px;
+  height: 160px;
+}
+[data-tema='organico'] .lienzo::after {
+  right: -50px;
+  bottom: -50px;
+  width: 200px;
+  height: 200px;
+}
+[data-tema='organico'] .pizarra {
+  position: relative;
+  z-index: 1;
+  border-radius: 32px;
+  background: #5e7d57;
+}
+/* Barra de herramientas flotante en píldora */
+[data-tema='organico'] .herramientas {
+  margin: 10px 0 10px 10px;
+  border: none;
+  border-radius: 38px;
+  background: var(--superficie-2);
+}
+[data-tema='organico'] .boton-herramienta {
+  border-radius: 999px;
+}
+[data-tema='organico'] .boton-herramienta.activa {
+  border-color: transparent;
+  background: var(--primario);
+  color: var(--sobre-primario);
+}
+[data-tema='organico'] .barra-superior,
+[data-tema='organico'] .linea-tiempo {
+  border-color: transparent;
+  background: var(--fondo);
+}
+/* Reproducir: círculo terracota de 52 px · Presentar: círculo azul cielo */
+[data-tema='organico'] .controles-reproduccion .primario {
+  width: 52px;
+  height: 52px;
+  border-color: var(--primario);
+  border-radius: 50%;
+  background: var(--primario);
+  color: var(--sobre-primario);
+}
+[data-tema='organico'] .lt-acciones .boton-texto.primario {
+  border-color: var(--acento);
+  background: var(--acento);
+  color: #1f2a2e;
+}
+[data-tema='organico'] .dialogo-cabecera {
+  border-bottom: none;
+}
+@media (max-width: 760px) {
+  [data-tema='organico'] .herramientas {
+    margin: 6px;
+  }
+  [data-tema='organico'] .lienzo {
+    padding: 6px;
+  }
+}
+
+/* =========================================================================
+   ELECTRONIC · pista de baile: neón sobre negro
+   ========================================================================= */
+[data-tema='electronic'] .deco-track {
+  display: inline-flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 2px;
+  color: var(--resalte);
+  font-family: var(--fuente-texto);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+[data-tema='electronic'] .deco-eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+[data-tema='electronic'] .deco-eq i {
+  width: 3px;
+  border-radius: 1px;
+  background: var(--primario);
+}
+[data-tema='electronic'] .deco-eq i:nth-child(1) {
+  height: 60%;
+}
+[data-tema='electronic'] .deco-eq i:nth-child(2) {
+  height: 100%;
+  background: var(--resalte);
+}
+[data-tema='electronic'] .deco-eq i:nth-child(3) {
+  height: 40%;
+  background: #f5ff3d;
+}
+[data-tema='electronic'] .deco-eq i:nth-child(4) {
+  height: 80%;
+}
+[data-tema='electronic'] .deco-eq i:nth-child(5) {
+  height: 55%;
+  background: var(--resalte);
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-tema='electronic'] .deco-eq i {
+    animation: eq 0.9s ease-in-out infinite alternate;
+  }
+  [data-tema='electronic'] .deco-eq i:nth-child(2n) {
+    animation-duration: 0.6s;
+  }
+  [data-tema='electronic'] .deco-eq i:nth-child(3n) {
+    animation-duration: 1.2s;
+  }
+}
+@keyframes eq {
+  to {
+    transform: scaleY(0.35);
+  }
+}
+[data-tema='electronic'] .nombre-jugada {
+  font-family: var(--fuente-titulo);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+[data-tema='electronic'] .boton-icono:not(.primario):not([aria-pressed='true']),
+[data-tema='electronic'] .boton-texto:not(.primario) {
+  background: var(--superficie);
+}
+/* Herramienta activa en magenta con brillo */
+[data-tema='electronic'] .boton-herramienta.activa {
+  border-color: var(--primario);
+  background: transparent;
+  color: var(--primario);
+  text-shadow: 0 0 8px rgba(255, 62, 165, 0.8);
+  box-shadow: 0 0 12px rgba(255, 62, 165, 0.35);
+}
+/* Reproducir: vinilo de 64 px con centro magenta y anillos oscuros */
+[data-tema='electronic'] .controles-reproduccion .primario {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #3a3358;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ff3ea5 0 22%, #0a0a0f 23% 30%, #14111f 31% 45%, #0a0a0f 46% 52%, #14111f 53% 70%, #0a0a0f 71%);
+  color: #f3f0ff;
+  box-shadow: 0 0 18px rgba(255, 62, 165, 0.45);
+}
+/* Paso activo como "01" con mini ecualizador */
+[data-tema='electronic'] .miniatura-num {
+  font-size: 0;
+}
+[data-tema='electronic'] .miniatura-num::before {
+  content: attr(data-num2);
+  font-size: 0.7rem;
+}
+[data-tema='electronic'] .miniatura.activa .miniatura-num::after {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 8px;
+  margin-left: 3px;
+  background: linear-gradient(90deg, #ff3ea5 0 2px, transparent 2px 4px, #29e0ff 4px 6px, transparent 6px 8px, #f5ff3d 8px 10px);
+}
+[data-tema='electronic'] .pizarra {
+  background: var(--fondo-lienzo);
+}
+[data-tema='electronic'] .dialogo {
+  border-color: var(--borde);
+}
+
+/* =========================================================================
+   AFRO · textiles de África occidental (patrones geométricos y abstractos)
+   ========================================================================= */
+/* Franja tipo kente de 14 px bajo el encabezado */
+[data-tema='afro'] .barra-superior {
+  position: relative;
+  z-index: 3;
+  border-bottom: none;
+  margin-bottom: 14px;
+}
+[data-tema='afro'] .barra-superior::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -14px;
+  height: 14px;
+  background: repeating-linear-gradient(
+    90deg,
+    #e0a526 0 18px,
+    #1d140d 18px 22px,
+    #1f6b45 22px 34px,
+    #1d140d 34px 38px,
+    #b8482a 38px 50px,
+    #1d140d 50px 54px,
+    #23305e 54px 66px,
+    #1d140d 66px 70px
+  );
+  pointer-events: none;
+}
+/* Borde de dientes en zigzag ocre de 10 px entre la cancha y los controles */
+[data-tema='afro'] .linea-tiempo {
+  position: relative;
+  border-top: none;
+  margin-top: 10px;
+}
+[data-tema='afro'] .linea-tiempo::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -10px;
+  height: 10px;
+  background:
+    linear-gradient(135deg, transparent 50%, #e0a526 50%) 0 0 / 20px 10px repeat-x,
+    linear-gradient(225deg, transparent 50%, #e0a526 50%) 10px 0 / 20px 10px repeat-x;
+  pointer-events: none;
+}
+/* Botones principales: cuadrados índigo con ícono ocre */
+[data-tema='afro'] .boton-icono {
+  border-color: var(--primario);
+  background: var(--primario);
+  color: var(--resalte);
+}
+[data-tema='afro'] .boton-icono:disabled {
+  background: var(--superficie-2);
+  color: var(--texto-suave);
+}
+/* "Jugadores" y "Presentar" en terracota */
+[data-tema='afro'] .boton-jugadores,
+[data-tema='afro'] .lt-acciones .boton-texto.primario {
+  border-color: var(--acento);
+  background: var(--acento);
+  color: var(--fondo);
+}
+/* Barra de herramientas oscura: la activa en ocre con barra superior de 4 px, las demás en crema */
+[data-tema='afro'] .herramientas {
+  background: var(--capa);
+  border-color: var(--capa);
+}
+[data-tema='afro'] .boton-herramienta {
+  color: var(--sobre-capa);
+}
+[data-tema='afro'] .boton-herramienta:hover {
+  background: rgba(246, 236, 217, 0.08);
+}
+[data-tema='afro'] .boton-herramienta.activa {
+  position: relative;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  color: var(--resalte);
+}
+[data-tema='afro'] .boton-herramienta.activa::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 6px;
+  right: 6px;
+  height: 4px;
+  background: var(--resalte);
+}
+
+/* Orgánico: lo que flota sobre la cancha va por encima del panel salvia */
+[data-tema='organico'] .leyenda,
+[data-tema='organico'] .burbuja-seleccion,
+[data-tema='organico'] .boton-zoom,
+[data-tema='organico'] .conteo,
+[data-tema='organico'] .ayuda,
+[data-tema='organico'] .panel {
+  z-index: 3;
+}
+[data-tema='organico'] .lienzo {
+  padding: 18px;
+}
+[data-tema='organico'] .boton-herramienta {
+  min-width: 52px;
+  font-size: 0.62rem;
+}
+
+/* Afro: la barra no recorta la franja kente que cuelga por debajo */
+[data-tema='afro'] .barra-superior {
+  overflow: visible;
+}

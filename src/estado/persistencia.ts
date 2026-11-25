@@ -6,7 +6,6 @@ import { useEditor } from './editorStore';
 import { useBiblioteca } from './bibliotecaStore';
 import { extraerPreferencias, usePreferencias, type Preferencias } from './preferencias';
 import { avisar } from './avisos';
-import { COLORES } from '../estilos/colores';
 import { useRoster, type MiembroRoster } from './rosterStore';
 import { hayEnlace, leerEnlace, limpiarEnlace } from '../exportar/enlace';
 
@@ -50,10 +49,11 @@ export async function iniciarPersistencia() {
   try {
     const p = await get<Partial<Preferencias>>(CLAVE_PREFS);
     if (p) {
-      // Quien tenía los colores por defecto anteriores pasa a los del estilo vintage.
-      if (p.colorAtaque?.toUpperCase() === '#F2A900') p.colorAtaque = COLORES.ataque;
-      if (p.colorDefensa?.toUpperCase() === '#1E4FD8') p.colorDefensa = COLORES.defensa;
-      usePreferencias.getState().actualizar(p);
+      // Los colores de equipo ahora los pone el estilo elegido (ventana Estilos), ya no se guardan aquí.
+      const resto: Record<string, unknown> = { ...p };
+      delete resto.colorAtaque;
+      delete resto.colorDefensa;
+      usePreferencias.getState().actualizar(resto as Partial<Preferencias>);
     }
   } catch (e) {
     console.warn('No se pudieron leer las preferencias', e);

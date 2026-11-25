@@ -1,6 +1,6 @@
 import type { Punto, TipoFlecha } from '../modelo/tipos';
 import { avanzar, distancia, RADIO_JUGADOR } from '../modelo/geometria';
-import { COLORES } from '../estilos/colores';
+import type { Tema } from '../temas';
 
 interface Props {
   id?: string;
@@ -10,8 +10,10 @@ interface Props {
   c: Punto | null;
   ancladoA?: boolean;
   ancladoB?: boolean;
-  /** Color de corte (el del equipo del jugador que corre). */
-  colorCorte: string;
+  /** Tema activo (colores de cada tipo de flecha y de la selección). */
+  tema: Tema;
+  /** Equipo del jugador que corre (el corte toma su color). */
+  equipoCorte?: 'ataque' | 'defensa';
   seleccionada?: boolean;
   /** Grosor del área táctil en metros. */
   anchoToque?: number;
@@ -43,14 +45,24 @@ export function geometriaFlecha(a: Punto, b: Punto, c: Punto | null, ancladoA = 
   return { d, punta, a2, b2 };
 }
 
-export function FlechaSVG({ id, tipo, a, b, c, ancladoA, ancladoB, colorCorte, seleccionada, anchoToque }: Props) {
+/** Color de una flecha según el tema. */
+export const colorFlecha = (tema: Tema, tipo: TipoFlecha, equipoCorte: 'ataque' | 'defensa' = 'ataque') =>
+  tipo === 'corte'
+    ? equipoCorte === 'defensa'
+      ? tema.flechas.corteDefensa
+      : tema.flechas.corteAtaque
+    : tipo === 'pase'
+      ? tema.flechas.pase
+      : tema.flechas.defensa;
+
+export function FlechaSVG({ id, tipo, a, b, c, ancladoA, ancladoB, tema, equipoCorte, seleccionada, anchoToque }: Props) {
   const { d, punta } = geometriaFlecha(a, b, c, ancladoA, ancladoB);
   const estilo = ESTILO_FLECHA[tipo];
-  const color = tipo === 'corte' ? colorCorte : tipo === 'pase' ? COLORES.pase : COLORES.movDefensa;
+  const color = colorFlecha(tema, tipo, equipoCorte);
   return (
     <g data-tipo={id ? 'flecha' : undefined} data-id={id} className="elemento">
       {seleccionada && (
-        <path d={d} fill="none" stroke={COLORES.seleccion} strokeOpacity={0.55} strokeWidth={estilo.ancho + 0.7} strokeLinecap="round" />
+        <path d={d} fill="none" stroke={tema.seleccion} strokeOpacity={0.55} strokeWidth={estilo.ancho + 0.7} strokeLinecap="round" />
       )}
       {anchoToque && <path d={d} fill="none" stroke="transparent" strokeWidth={anchoToque} pointerEvents="stroke" />}
       <path

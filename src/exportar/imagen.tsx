@@ -4,7 +4,8 @@ import type { Orientacion, Play, Step } from '../modelo/tipos';
 import { regionVista } from '../modelo/cancha';
 import type { Preferencias } from '../estado/preferencias';
 import type { MiembroRoster } from '../estado/rosterStore';
-import { COLORES } from '../estilos/colores';
+import type { EstiloJugador, Tema } from '../temas';
+import { colorFlecha } from '../cancha/FlechaSVG';
 import { crearNombreDe, DibujoCancha } from '../cancha/CanchaEstatica';
 
 const FUENTE = "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif";
@@ -15,6 +16,8 @@ export interface Contexto {
   prefs: Preferencias;
   miembros: MiembroRoster[];
   orientacion: Orientacion;
+  /** Tema con que se exporta (el activo): colores y formas de la cancha y la leyenda. */
+  tema: Tema;
 }
 
 /** Dibuja el paso en un SVG fuera de pantalla y lo devuelve como texto. */
@@ -28,8 +31,7 @@ export function svgDePaso(paso: Step, c: Contexto, opacidadFlechas = 1): string 
         vista={c.jugada.vista}
         lado={c.jugada.lado}
         orientacion={c.orientacion}
-        colorAtaque={c.prefs.colorAtaque}
-        colorDefensa={c.prefs.colorDefensa}
+        tema={c.tema}
         mostrarMatch={c.prefs.mostrarMatch}
         nombreDe={crearNombreDe(c.prefs.mostrarNombres, c.miembros)}
         opacidadFlechas={opacidadFlechas}
@@ -55,33 +57,42 @@ async function cargarImagen(svg: string): Promise<HTMLImageElement> {
   }
 }
 
-function leyenda(ctx: CanvasRenderingContext2D, x0: number, y: number, prefs: Preferencias, escala: number) {
+/** Dibuja la forma de un jugador del tema (círculo, anillo o triángulo) en el lienzo. */
+function formaEnLienzo(ctx: CanvasRenderingContext2D, e: EstiloJugador, cx: number, cy: number, r: number) {
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  if (e.forma === 'triangulo' || e.forma === 'triangulo-redondeado') {
+    ctx.moveTo(cx, cy - r);
+    ctx.lineTo(cx + r * 0.95, cy + r * 0.75);
+    ctx.lineTo(cx - r * 0.95, cy + r * 0.75);
+    ctx.closePath();
+  } else {
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  }
+  ctx.lineWidth = Math.max(2, r * (e.forma === 'anillo' ? 0.3 : 0.2));
+  ctx.strokeStyle = e.borde;
+  if (e.forma !== 'anillo') {
+    ctx.fillStyle = e.relleno;
+    ctx.fill();
+  }
+  ctx.stroke();
+}
+
+function leyenda(ctx: CanvasRenderingContext2D, x0: number, y: number, tema: Tema, escala: number) {
   ctx.font = `600 ${22 * escala}px ${FUENTE}`;
   ctx.textBaseline = 'middle';
   ctx.textAlign = 'left';
   let x = x0;
   const texto = (t: string) => {
-    ctx.fillStyle = '#FFFFFF';
+    ctx.fillStyle = tema.css['sobre-capa'];
     ctx.fillText(t, x, y);
     x += ctx.measureText(t).width + 34 * escala;
   };
   const r = 11 * escala;
-  ctx.fillStyle = prefs.colorAtaque;
-  ctx.beginPath();
-  ctx.arc(x + r, y, r, 0, Math.PI * 2);
-  ctx.fill();
+  formaEnLienzo(ctx, tema.ataque, x + r, y, r);
   x += 2 * r + 8 * escala;
   texto('Ataque');
-  ctx.fillStyle = '#FFFFFF';
-  ctx.strokeStyle = prefs.colorDefensa;
-  ctx.lineWidth = 4 * escala;
-  ctx.beginPath();
-  ctx.moveTo(x + r, y - r);
-  ctx.lineTo(x + 2 * r, y + r * 0.8);
-  ctx.lineTo(x, y + r * 0.8);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
+  formaEnLienzo(ctx, tema.defensa, x + r, y, r);
   x += 2 * r + 8 * escala;
   texto('Defensa');
   const linea = (color: string, guiones: number[], nombre: string) => {
@@ -103,9 +114,9 @@ function leyenda(ctx: CanvasRenderingContext2D, x0: number, y: number, prefs: Pr
     x += 66 * escala;
     texto(nombre);
   };
-  linea(prefs.colorAtaque, [], 'Corte');
-  linea(COLORES.pase, [14, 10], 'Pase');
-  linea(COLORES.movDefensa, [0.1, 10], 'Mov. defensivo');
+  linea(colorFlecha(tema, 'corte'), [], 'Corte');
+  linea(colorFlecha(tema, 'pase'), [14, 10], 'Pase');
+  linea(colorFlecha(tema, 'defensa'), [0.1, 10], 'Mov. defensivo');
 }
 
 /** Lienzo con cabecera (título y paso), cancha y pie (leyenda). */
@@ -140,10 +151,10 @@ export class Lienzo {
   async dibujar(paso: Step, textoPaso: string, opacidadFlechas = 1) {
     const { ctx, canvas, escala } = this;
     const img = await cargarImagen(svgDePaso(paso, this.c, opacidadFlechas));
-    ctx.fillStyle = '#0f2a14';
+    ctx.fillStyle = this.c.tema.css.capa;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = '#FFFFFF';
+    ctx.fillStyle = this.c.tema.css['sobre-capa'];
     ctx.textBaseline = 'middle';
     ctx.font = `700 ${40 * escala}px ${FUENTE}`;
     const margen = 28 * escala;
@@ -156,7 +167,7 @@ export class Lienzo {
     ctx.fillText(titulo, margen, this.cabecera / 2);
 
     ctx.drawImage(img, 0, this.cabecera, canvas.width, this.altoCancha);
-    leyenda(ctx, margen, this.cabecera + this.altoCancha + this.pie / 2, this.c.prefs, escala);
+    leyenda(ctx, margen, this.cabecera + this.altoCancha + this.pie / 2, this.c.tema, escala);
   }
 }
 

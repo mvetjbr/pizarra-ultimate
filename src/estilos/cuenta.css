@@ -97,8 +97,8 @@
 .markdown mark {
   padding: 0 3px;
   border-radius: 4px;
-  background: #fff1b8;
-  color: #6b4e00;
+  background: var(--resalte);
+  color: var(--sobre-resalte);
   font-weight: 700;
 }
 .tabla-legal {
@@ -183,7 +183,7 @@
   padding: 0;
   border: none;
   background: none;
-  color: #0b6bb5;
+  color: var(--primario);
   font-weight: 600;
   text-decoration: underline;
 }
@@ -202,7 +202,7 @@
   margin: 0;
   padding: 10px 12px;
   border-radius: 8px;
-  background: #fdecea;
+  background: var(--superficie-2);
   color: var(--peligro);
   font-weight: 600;
 }
@@ -210,8 +210,8 @@
   margin: 0;
   padding: 10px 12px;
   border-radius: 8px;
-  background: #fff6db;
-  color: #6b4e00;
+  background: var(--resalte);
+  color: var(--sobre-resalte);
 }
 .boton-texto.grande {
   min-height: 52px;
@@ -245,7 +245,7 @@
   font-size: 1.1rem;
 }
 .seccion-datos.peligro {
-  border-color: #f2b8b5;
+  border-color: var(--peligro);
 }
 .lista-registros {
   margin: 10px 0 0;
@@ -269,7 +269,7 @@
   height: 30px;
   border-radius: 50%;
   background: var(--primario);
-  color: #fff;
+  color: var(--sobre-primario);
   font-size: 0.8rem;
   font-weight: 700;
 }

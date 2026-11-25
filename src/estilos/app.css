@@ -54,7 +54,7 @@ button:disabled {
 }
 
 :focus-visible {
-  outline: 3px solid #0b84d8;
+  outline: 3px solid var(--acento);
   outline-offset: 2px;
 }
 
@@ -125,8 +125,8 @@ button:disabled {
   text-anchor: middle;
   dominant-baseline: central;
   font-weight: 600;
-  fill: #ffffff;
-  stroke: rgba(0, 0, 0, 0.6);
+  fill: var(--texto-cancha);
+  stroke: var(--contorno-texto-cancha);
   stroke-width: 0.3px;
   paint-order: stroke;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -229,7 +229,7 @@ button:disabled {
 }
 .segmentado button[aria-pressed='true'] {
   background: var(--primario);
-  color: #fff;
+  color: var(--sobre-primario);
 }
 
 .proporcion {
@@ -261,7 +261,7 @@ button:disabled {
   background: var(--superficie);
   border: 1px solid var(--borde);
   border-radius: var(--radio);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--sombra-grande);
 }
 .menu-lista > button,
 .menu-lista > label {
@@ -332,7 +332,7 @@ button:disabled {
   color: var(--primario);
 }
 .boton-herramienta.peligro.activa {
-  background: #fdecea;
+  background: var(--superficie-2);
   border-color: var(--peligro);
   color: var(--peligro);
 }
@@ -370,7 +370,7 @@ button:disabled {
   gap: 4px;
   padding: 4px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.45);
+  background: var(--capa);
   opacity: 0.6;
   transition: opacity 0.15s;
 }
@@ -387,15 +387,15 @@ button:disabled {
   border: none;
   border-radius: 999px;
   background: transparent;
-  color: #fff;
+  color: var(--sobre-capa);
   font-weight: 700;
   font-size: 1.05rem;
 }
 .burbuja-seleccion button.borrar {
-  background: rgba(179, 38, 30, 0.85);
+  background: var(--peligro);
 }
 .burbuja-seleccion button[aria-pressed='true'] {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--primario);
 }
 
 .boton-zoom {
@@ -410,8 +410,8 @@ button:disabled {
   padding: 0 12px;
   border: none;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.72);
-  color: #fff;
+  background: var(--capa);
+  color: var(--sobre-capa);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -426,8 +426,8 @@ button:disabled {
   max-width: calc(100% - 20px);
   padding: 6px 10px;
   border-radius: var(--radio);
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
+  background: var(--capa);
+  color: var(--sobre-capa);
   font-size: 0.8rem;
   pointer-events: none;
 }
@@ -452,7 +452,7 @@ button:disabled {
   min-height: 30px;
   border: none;
   background: none;
-  color: #fff;
+  color: var(--sobre-capa);
   font-size: 1.2rem;
   line-height: 1;
 }
@@ -474,7 +474,7 @@ button:disabled {
   max-width: calc(100% - 20px);
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--superficie);
   color: var(--texto);
   font-size: 0.85rem;
   text-align: center;
@@ -494,7 +494,7 @@ button:disabled {
   padding: 12px;
   background: var(--superficie);
   border-radius: var(--radio);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--sombra-grande);
 }
 .panel-cabecera {
   display: flex;

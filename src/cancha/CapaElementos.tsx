@@ -1,6 +1,7 @@
 import type { Player, Step } from '../modelo/tipos';
 import { buscarJugador, controlDe, extremos, posDisco } from '../modelo/geometria';
 import type { Seleccion } from '../estado/editorStore';
+import type { Tema } from '../temas';
 import { JugadorSVG } from './JugadorSVG';
 import { DiscoSVG } from './DiscoSVG';
 import { FlechaSVG } from './FlechaSVG';
@@ -9,8 +10,8 @@ import { TextoSVG, ZonaSVG } from './ZonaTextoSVG';
 interface Props {
   paso: Step;
   rot?: string;
-  colorAtaque: string;
-  colorDefensa: string;
+  /** Tema activo: forma y colores de jugadores, flechas y disco. */
+  tema: Tema;
   mostrarMatch: boolean;
   seleccion?: Seleccion | null;
   /** Radio táctil en metros; si falta, la capa es solo de lectura (miniaturas, presentación). */
@@ -24,15 +25,14 @@ interface Props {
 }
 
 /** Dibuja todos los elementos de un paso. Reutilizable en editor, miniaturas y presentación. */
-export function CapaElementos({ paso, rot, colorAtaque, colorDefensa, mostrarMatch, seleccion, radioToque, escalaFichas, opacidadFlechas, nombreDe }: Props) {
+export function CapaElementos({ paso, rot, tema, mostrarMatch, seleccion, radioToque, escalaFichas, opacidadFlechas, nombreDe }: Props) {
   const es = (tipo: string, id: string) => seleccion?.tipo === tipo && seleccion.id === id;
   const interactivo = radioToque !== undefined;
-  const color = (equipo?: string) => (equipo === 'defensa' ? colorDefensa : colorAtaque);
   return (
     <g pointerEvents={interactivo ? undefined : 'none'}>
       <g>
         {paso.zonas.map((z) => (
-          <ZonaSVG key={z.id} z={z} rot={rot} seleccionada={es('zona', z.id)} />
+          <ZonaSVG key={z.id} z={z} rot={rot} seleccionada={es('zona', z.id)} colorSeleccion={tema.seleccion} />
         ))}
       </g>
       <g opacity={opacidadFlechas}>
@@ -48,7 +48,8 @@ export function CapaElementos({ paso, rot, colorAtaque, colorDefensa, mostrarMat
               c={controlDe(f, a, b)}
               ancladoA={ancladoA}
               ancladoB={ancladoB}
-              colorCorte={color(buscarJugador(paso, f.desdeId)?.equipo)}
+              tema={tema}
+              equipoCorte={buscarJugador(paso, f.desdeId)?.equipo === 'defensa' ? 'defensa' : 'ataque'}
               seleccionada={es('flecha', f.id)}
               anchoToque={radioToque ? radioToque * 1.1 : undefined}
             />
@@ -57,7 +58,7 @@ export function CapaElementos({ paso, rot, colorAtaque, colorDefensa, mostrarMat
       </g>
       <g>
         {paso.textos.map((t) => (
-          <TextoSVG key={t.id} t={t} rot={rot} seleccionado={es('texto', t.id)} interactivo={interactivo} />
+          <TextoSVG key={t.id} t={t} rot={rot} seleccionado={es('texto', t.id)} interactivo={interactivo} colorSeleccion={tema.seleccion} />
         ))}
       </g>
       {(['defensa', 'ataque'] as const).map((equipo) => (
@@ -68,7 +69,8 @@ export function CapaElementos({ paso, rot, colorAtaque, colorDefensa, mostrarMat
               <JugadorSVG
                 key={j.id}
                 j={j}
-                color={color(equipo)}
+                estilo={equipo === 'defensa' ? tema.defensa : tema.ataque}
+                colorSeleccion={tema.seleccion}
                 rot={rot}
                 mostrarMatch={mostrarMatch}
                 seleccionado={es('jugador', j.id)}
@@ -81,6 +83,7 @@ export function CapaElementos({ paso, rot, colorAtaque, colorDefensa, mostrarMat
       ))}
       <DiscoSVG
         p={posDisco(paso)}
+        tema={tema}
         seleccionado={es('disco', 'disco')}
         radioToque={radioToque ? Math.max(0.8, radioToque * 0.7) : undefined}
       />

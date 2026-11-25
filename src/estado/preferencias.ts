@@ -1,11 +1,8 @@
 import { create } from 'zustand';
-import { COLORES } from '../estilos/colores';
 import type { Proporcion } from '../modelo/fabrica';
 import type { Carril, Formacion } from '../modelo/formaciones';
 
 export interface Preferencias {
-  colorAtaque: string;
-  colorDefensa: string;
   mostrarCuadricula: boolean;
   mostrarMatch: boolean;
   mostrarLeyenda: boolean;
@@ -28,8 +25,6 @@ export interface Preferencias {
 }
 
 export const PREFERENCIAS_INICIALES: Preferencias = {
-  colorAtaque: COLORES.ataque,
-  colorDefensa: COLORES.defensa,
   mostrarCuadricula: false,
   mostrarMatch: true,
   mostrarLeyenda: true,
@@ -60,8 +55,6 @@ const entre = (n: unknown, min: number, max: number, def: number) =>
 
 export function extraerPreferencias(s: Preferencias): Preferencias {
   return {
-    colorAtaque: s.colorAtaque,
-    colorDefensa: s.colorDefensa,
     mostrarCuadricula: s.mostrarCuadricula,
     mostrarMatch: s.mostrarMatch,
     mostrarLeyenda: s.mostrarLeyenda,

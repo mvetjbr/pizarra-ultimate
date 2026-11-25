@@ -15,7 +15,7 @@ import {
 } from '../modelo/geometria';
 import { pasoActivo, useEditor, type TipoSeleccion } from '../estado/editorStore';
 import { usePreferencias } from '../estado/preferencias';
-import { COLORES } from '../estilos/colores';
+import { useTema } from '../temas';
 import { useReproduccion } from '../animacion/reproductor';
 import { interpolar } from '../animacion/interpolar';
 import { Cancha } from './Cancha';
@@ -85,6 +85,7 @@ export function Pizarra() {
   const seleccion = useEditor((s) => s.seleccion);
   const formaZona = useEditor((s) => s.formaZona);
   const prefs = usePreferencias();
+  const tema = useTema((s) => s.tema);
   const miembros = useRoster((s) => s.miembros);
   // Durante la animación se dibuja un cuadro intermedio y la edición queda en pausa.
   const posicion = useReproduccion((s) => s.posicion);
@@ -479,13 +480,13 @@ export function Pizarra() {
           <g>
             {manija('a', f.id, 'desde', a2)}
             {manija('b', f.id, 'hasta', b2)}
-            {medio && manija('c', f.id, 'control', medio, COLORES.seleccion)}
+            {medio && manija('c', f.id, 'control', medio, tema.seleccion)}
           </g>
         );
       }
     } else if (seleccion.tipo === 'zona') {
       const z = paso.zonas.find((x) => x.id === seleccion.id);
-      if (z) manijas = manija('t', z.id, 'tamano', { x: z.x + z.ancho, y: z.y + z.alto }, COLORES.seleccion);
+      if (z) manijas = manija('t', z.id, 'tamano', { x: z.x + z.ancho, y: z.y + z.alto }, tema.seleccion);
     }
   }
 
@@ -498,7 +499,7 @@ export function Pizarra() {
         b={borrador.b}
         c={null}
         ancladoA={borrador.anclado}
-        colorCorte={prefs.colorAtaque}
+        tema={tema}
       />
     );
   } else if (borrador?.tipo === 'zona') {
@@ -530,12 +531,11 @@ export function Pizarra() {
       aria-label="Cancha de ultimate"
     >
       <g ref={gRef} transform={transformacion(orientacion)}>
-        <Cancha cuadricula={prefs.mostrarCuadricula} />
+        <Cancha cuadricula={prefs.mostrarCuadricula} tema={tema} />
         <CapaElementos
           paso={cuadro?.paso ?? paso}
           rot={rot}
-          colorAtaque={prefs.colorAtaque}
-          colorDefensa={prefs.colorDefensa}
+          tema={tema}
           mostrarMatch={prefs.mostrarMatch}
           seleccion={cuadro ? null : seleccion}
           radioToque={radioToque}

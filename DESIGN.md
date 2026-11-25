@@ -1,4 +1,65 @@
-# DESIGN.md — Estilo vintage de Pizarra Ultimate
+# DESIGN.md — Estilos de Pizarra Ultimate
+
+## Sistema de estilos (temas)
+
+Cada persona elige el estilo en **⋯ → Estilos…**. El cambio se aplica al instante y queda guardado en el dispositivo (`localStorage`, clave `pizarra:tema`). Hay 5 estilos:
+
+| Tema | Archivo | Frase |
+|---|---|---|
+| Clásico (predeterminado) | `src/temas/clasico.ts` | El de siempre. |
+| Minimalista | `src/temas/minimalista.ts` | Blanco, negro y un solo rojo. |
+| Orgánico | `src/temas/organico.ts` | Tonos tierra y formas redondas. |
+| Electronic | `src/temas/electronic.ts` | Pista de baile: neón sobre negro. |
+| Afro | `src/temas/afro.ts` | Textiles de África occidental: índigo, ocre y tierra. |
+
+**Reglas para todos:**
+- **Ningún componente lleva colores escritos a mano.**
+  - La interfaz usa variables CSS con nombre de función, que cada tema define en su campo `css`: `--fondo`, `--superficie`, `--superficie-2`, `--texto`, `--texto-suave`, `--borde`, `--ancho-borde`, `--primario` / `--sobre-primario`, `--resalte` / `--sobre-resalte`, `--acento`, `--peligro`, `--cabecera` / `--sobre-cabecera`, `--capa` / `--sobre-capa`, `--sombra`, `--sombra-grande`, `--radio`, `--radio-grande`, `--radio-chip`, `--fuente-titulo`, `--fuente-texto`, `--peso-titulo`, `--mayus-titulo`, `--mayus-etiqueta`, `--icono-circulo`, `--texto-cancha`, `--velo`, etc.
+  - La cancha, los jugadores, las flechas y el disco se dibujan con el objeto del tema (`cancha`, `ataque`, `defensa`, `flechas`, `disco`). Así las imágenes, GIF y videos exportados salen con los colores reales.
+- **Ataque y defensa se distinguen por FORMA en todos los temas,** no solo por color, y la leyenda muestra esa forma:
+  - Clásico: círculo / triángulo.
+  - Minimalista: círculo relleno / anillo.
+  - Orgánico: círculo / triángulo redondeado.
+  - Electronic y Afro: círculo / triángulo.
+- **Lo que solo cambia la apariencia:** un tema nunca cambia la funcionalidad ni los datos de las jugadas.
+- **Fuentes:** solo se cargan las del tema activo, desde Google Fonts, cuando se elige. Respaldo: `system-ui`, `Georgia` o `monospace`.
+- **Decoraciones propias** (ecualizador, kente, zigzag, panel salvia…): están en `src/estilos/temas-deco.css`, bajo `[data-tema="…"]`. Sus colores son los de la especificación de cada tema.
+- **Contraste:** `node scripts/contraste-temas.mjs` revisa cada tema. El texto de la interfaz debe dar al menos 4,5:1, y las formas e íconos al menos 3:1.
+- **Tema nuevo o cambio de colores:** se agrega el archivo en `src/temas/`, se suma a `TEMAS` en `src/temas/index.ts`, se corre el script de contraste y se documenta aquí.
+
+**Resumen de cada tema:**
+- **Minimalista**
+  - Colores: blanco `#ffffff`, superficie `#eeeeee`, texto `#111111`, secundario `#666666`, acento rojo `#d9211a`.
+  - Fuente: Archivo. Títulos en 800 con espaciado -0.01em; etiquetas en mayúsculas con 0.12em.
+  - Forma: radios 0, bordes de 1,5 px y sin sombras.
+  - Jugadores: ataque en círculo negro con número blanco; defensa en anillo rojo.
+  - El rojo solo se usa en la defensa, la herramienta activa (con una barra de 3 px arriba) y "Presentar".
+- **Orgánico**
+  - Colores: fondo `#f3ece0`, superficie `#e6d9c3`, texto `#3a2e24`, terracota `#a8502c`, azul cielo `#5d8ea3`.
+  - Fuentes: Young Serif en los títulos y Outfit en el resto.
+  - Botones en píldora. La cancha va en un panel salvia `#5e7d57` con radio de 32 px y círculos `#6d8c65`.
+  - Jugadores: ataque en círculo terracota con anillo crema; defensa en triángulo redondeado arena con borde azul cielo.
+  - Barra de herramientas flotante. Reproducir: círculo terracota de 52 px. Presentar: azul cielo.
+- **Electronic**
+  - Colores: negro `#0a0a0f`, superficies `#100d1a` / `#14111f`, texto `#f3f0ff`, magenta `#ff3ea5`, cian `#29e0ff`, amarillo `#f5ff3d`.
+  - Fuentes: Unbounded 800 en mayúsculas para los títulos y Space Mono para el resto.
+  - Cancha: borde cian con brillo y zonas en rayas.
+  - Jugadores: ataque en círculo amarillo con brillo; defensa en triángulo cian.
+  - Ecualizador y "TRACK 01" en el encabezado, reproducir en forma de vinilo y paso activo "01".
+  - Las animaciones respetan `prefers-reduced-motion`.
+- **Afro**
+  - Colores: fondo `#f6ecd9`, texto `#1d140d`, índigo `#23305e`, ocre `#e0a526`, terracota `#b8482a`, verde `#1f6b45`.
+  - Fuentes: Bricolage Grotesque 800 en los títulos y DM Sans en el resto.
+  - Decoración: franja kente de 14 px bajo el encabezado y zigzag ocre sobre los controles.
+  - Jugadores: ataque en círculo ocre; defensa en triángulo terracota con contorno crema.
+  - Botones índigo con ícono ocre; "Jugadores" y "Presentar" en terracota. Barra de herramientas oscura con la herramienta activa en ocre.
+  - Patrones geométricos y abstractos; nada de caricaturas ni estereotipos.
+
+El resto de este documento es el detalle del tema **Clásico** (vintage).
+
+---
+
+# Tema Clásico — estilo vintage
 
 Afiche deportivo de los 70-80: fondo crema, bloques planos de color, bordes gruesos en tinta y sombras sólidas desplazadas.
 
@@ -15,7 +76,7 @@ Toda pantalla, componente o cambio visual debe seguir este documento. Si algo no
 
 ## Colores (variables CSS)
 
-Definidos en `src/estilos/app.css` (`:root`). Úsalos siempre por su variable; nunca escribas un hex suelto en un componente.
+Valores del tema Clásico (`src/temas/clasico.ts`). Los nombres de abajo son los de la paleta vintage; en el código se usan las variables con nombre de función del sistema de estilos (por ejemplo, `--fondo` = crema, `--primario` = petróleo, `--resalte` = mostaza, `--acento` = coral, `--borde` = tinta).
 
 ```css
 :root {
