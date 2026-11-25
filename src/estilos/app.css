@@ -360,6 +360,44 @@ button:disabled {
 }
 
 /* ---------- Superposiciones sobre la cancha ---------- */
+/* Burbuja del elemento seleccionado: pequeña, en la esquina, casi transparente hasta usarla. */
+.burbuja-seleccion {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+.burbuja-seleccion:hover,
+.burbuja-seleccion:focus-within {
+  opacity: 1;
+}
+.burbuja-seleccion button {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--toque);
+  min-height: var(--toque);
+  padding: 0 10px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.burbuja-seleccion button.borrar {
+  background: rgba(179, 38, 30, 0.85);
+}
+.burbuja-seleccion button[aria-pressed='true'] {
+  background: rgba(255, 255, 255, 0.25);
+}
+
 .boton-zoom {
   position: absolute;
   top: 8px;
