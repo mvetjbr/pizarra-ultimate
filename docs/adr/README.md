@@ -12,5 +12,9 @@ Cada archivo registra una decisión: qué la motivó, qué se decidió y qué co
 | [0006](0006-enlace-compartir-sin-nombres.md) | El enlace para compartir no lleva nombres de jugadores | aceptada |
 | [0007](0007-menores-de-edad.md) | Menores de edad: bloqueados por ahora | aceptada (temporal) |
 | [0008](0008-despliegue.md) | Cloudflare Pages como destino y build bloqueado por textos incompletos | aceptada (pendiente) |
+| [0009](0009-sincronizacion-local-primero.md) | Jugadas en la nube: primero el dispositivo, sincronización por versión | aceptada |
+| [0010](0010-compartir-por-enlace.md) | Compartir por enlace con permisos validados en la base de datos | aceptada |
+| [0011](0011-libros-de-jugadas.md) | Libros de jugadas solo en la nube y siempre del mismo dueño | aceptada |
+| [0012](0012-interfaz-celular-y-zoom.md) | En el celular la cancha sigue al aparato, con zoom con dos dedos | aceptada |
 
 Plantilla para uno nuevo: `# ADR 00XX · Título`, seguido de Estado, Fecha, Contexto, Decisión y Consecuencias.

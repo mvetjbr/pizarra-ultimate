@@ -119,6 +119,18 @@ En macOS o Linux:
 BASE_PATH=/ npm run build
 ```
 
+## Pasar jugadas a la app (por ejemplo, sacadas de un video)
+
+El formato del archivo está explicado en [docs/FORMATO_JUGADAS.md](docs/FORMATO_JUGADAS.md), con un ejemplo probado en [docs/ejemplo-jugadas.json](docs/ejemplo-jugadas.json). Se importa en **Biblioteca → Importar JSON**.
+
+## Pruebas de la base de datos
+
+```bash
+npm run prueba:sql
+```
+
+Corre las migraciones en un Postgres local (PGlite) y prueba los permisos con varias cuentas: textos legales, consentimientos, y quién puede ver, editar, compartir y borrar.
+
 ## Decisiones de arquitectura
 
 Las decisiones importantes del proyecto (por qué Vite, por qué Supabase, cómo se guardan los consentimientos, etc.) están en [docs/adr](docs/adr/README.md).
