@@ -11,6 +11,7 @@ import { recargarSesion, useSesion } from '../../nube/sesion';
 import { AVISO_PRIVACIDAD_CORTO, documento } from '../../legal/documentos';
 import { irA, volverAlEditor } from '../../estado/ruta';
 import { avisar } from '../../estado/avisos';
+import { pasarInicio } from '../../estado/inicio';
 import { Markdown } from '../Markdown';
 import { armarAceptaciones, Casillas, guardarCasillas, tomarCasillas, type EstadoCasillas } from './Casillas';
 
@@ -98,6 +99,7 @@ function Ingresar() {
     }
     await recargarSesion();
     avisar('Sesión iniciada');
+    pasarInicio();
     volverAlEditor();
   };
 
@@ -370,6 +372,7 @@ export function NuevaContrasena() {
     if (err) return setError('No se pudo cambiar la contraseña. Pide un enlace nuevo.');
     useSesion.setState({ recuperandoContrasena: false });
     avisar('Contraseña actualizada');
+    pasarInicio();
     volverAlEditor();
   };
   return (

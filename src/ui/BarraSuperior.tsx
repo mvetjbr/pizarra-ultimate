@@ -9,6 +9,7 @@ import { avisar } from '../estado/avisos';
 import { cortarAnimacion } from '../animacion/reproductor';
 import { hayServidor } from '../nube/cliente';
 import { nombreVisible, useSesion } from '../nube/sesion';
+import { volverAlInicio } from '../estado/inicio';
 import { irA } from '../estado/ruta';
 import { iniciales } from '../estado/rosterStore';
 import {
@@ -242,6 +243,16 @@ export function BarraSuperior() {
           <IconoMenu />
         </summary>
         <div className="menu-lista">
+          {hayServidor && (
+            <button
+              onClick={() => {
+                cerrarMenu();
+                volverAlInicio();
+              }}
+            >
+              Volver al inicio
+            </button>
+          )}
           {hayServidor && (
             <button className="solo-movil" onClick={irACuenta}>
               {usuario ? `Mis datos (${nombreVisible(perfil)})` : 'Ingresar o crear cuenta'}

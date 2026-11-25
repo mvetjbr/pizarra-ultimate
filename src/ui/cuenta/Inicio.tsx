@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { DIBUJO_MUNECO } from '../../conteo/munecosSvg';
 import { irA } from '../../estado/ruta';
-import { omitirInicio } from '../../estado/inicio';
+import { pasarInicio } from '../../estado/inicio';
+import { usePreferencias } from '../../estado/preferencias';
+import { munecoVisible } from '../../conteo/munecos';
+import { nombreVisible, useSesion } from '../../nube/sesion';
 
 /** Carita de perro que reemplaza la palabra «perro» en el saludo. */
 function Perro() {
@@ -36,12 +39,19 @@ function Cancha() {
   );
 }
 
-/** Primera pantalla para quien no ha iniciado sesión: crear cuenta, ingresar u omitir. */
+/**
+ * Pantalla con que abre la app en cada visita. Saluda con la mascota elegida en este dispositivo.
+ * Sin sesión: crear cuenta, ingresar u omitir. Con sesión: entrar a la pizarra o ir a Mis datos.
+ */
 export function PantallaInicio() {
   useEffect(() => {
     document.title = 'Pizarra Ultimate';
   }, []);
-  const alien = DIBUJO_MUNECO.alien;
+  const usuario = useSesion((s) => s.usuario);
+  const perfil = useSesion((s) => s.perfil);
+  const clave = usePreferencias((s) => munecoVisible(s.muneco, s.mascotasElegidas, s.modoEditor));
+  const mascota = DIBUJO_MUNECO[clave] ?? DIBUJO_MUNECO.alien;
+  const nombre = nombreVisible(perfil);
   return (
     <main className="inicio">
       <h1 className="inicio-titulo">
@@ -56,29 +66,41 @@ export function PantallaInicio() {
         </p>
         <div className="inicio-ilustracion">
           <Cancha />
-          {alien && (
+          {mascota && (
             <svg
               className="inicio-mascota"
               viewBox="-6 -8 82 104"
               role="img"
-              aria-label="La mascota, un alien verde, saluda parada en la cancha"
-              dangerouslySetInnerHTML={{ __html: alien.svg }}
+              aria-label={`${mascota.nombre} saluda parado en la cancha`}
+              dangerouslySetInnerHTML={{ __html: mascota.svg }}
             />
           )}
         </div>
       </div>
       <p className="inicio-lema">Diseña, guarda y comparte las jugadas de tu equipo.</p>
-      <div className="inicio-botones">
+      {usuario ? (
+        <div className="inicio-botones">
+          {nombre && <p className="inicio-sesion">Ingresaste como <strong>{nombre}</strong></p>}
+          <button className="boton-texto primario grande" onClick={pasarInicio}>
+            Entrar a la pizarra
+          </button>
+          <button className="boton-texto grande" onClick={() => irA('/mis-datos')}>
+            Mis datos
+          </button>
+        </div>
+      ) : (
+        <div className="inicio-botones">
           <button className="boton-texto primario grande" onClick={() => irA('/cuenta/registro')}>
             Crear cuenta nueva
           </button>
           <button className="boton-texto grande" onClick={() => irA('/cuenta')}>
             Iniciar sesión
           </button>
-          <button className="inicio-omitir" onClick={omitirInicio}>
+          <button className="inicio-omitir" onClick={pasarInicio}>
             Omitir por ahora
           </button>
-      </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -149,6 +149,11 @@
   gap: 14px;
   margin-top: 8px;
 }
+.inicio-sesion {
+  margin: 0;
+  text-align: center;
+  color: var(--texto-suave);
+}
 .inicio-omitir {
   min-height: 44px;
   border: none;
@@ -185,7 +190,8 @@
     font-size: 2.5rem;
   }
   .inicio-titulo,
-  .inicio-lema {
+  .inicio-lema,
+  .inicio-sesion {
     text-align: left;
   }
   .inicio-lema {

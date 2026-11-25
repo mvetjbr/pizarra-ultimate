@@ -110,10 +110,9 @@ export default function App() {
   const recuperando = useSesion((s) => s.recuperandoContrasena);
   const debeAceptar = useSesion((s) => !!s.usuario && s.pendientes.length > 0);
   const sesionLista = useSesion((s) => s.listo);
-  const conUsuario = useSesion((s) => !!s.usuario);
-  const omitioInicio = useInicio((s) => s.omitido);
-  // El inicio sale a quien no ha ingresado ni lo ha omitido en este dispositivo (solo si hay cuentas).
-  const pideInicio = hayServidor && !omitioInicio && !conUsuario;
+  const pasoInicio = useInicio((s) => s.pasado);
+  // El inicio sale en cada visita, con o sin sesión, hasta que la persona entra (solo si hay cuentas).
+  const pideInicio = hayServidor && !pasoInicio;
   useAtajosTeclado();
   useEnlacePendiente();
 
