@@ -7,6 +7,9 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig(({ command, isPreview }) => ({
   // `vite preview` también debe usar la base del build para servir dist/ correctamente.
   base: command === 'build' || isPreview ? process.env.BASE_PATH ?? '/pizarra-ultimate/' : '/',
+  // Herramientas aparte (p. ej. sacar jugadas de videos, con ffmpeg) no son parte de la app:
+  // vigilarlas tumbaba el servidor cuando sus archivos estaban en uso.
+  server: { watch: { ignored: ['**/tools/**', '**/supabase/**', '**/docs/**'] } },
   plugins: [
     react(),
     VitePWA({
