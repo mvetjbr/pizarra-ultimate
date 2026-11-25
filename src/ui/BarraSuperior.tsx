@@ -29,6 +29,7 @@ import { Jugadores } from './Jugadores';
 import { AjustesConteo } from '../conteo/AjustesConteo';
 import { proporcionValida } from '../estado/jugadores';
 import { useOrientacionAutomatica } from '../estado/pantalla';
+import { encuadrar } from '../modelo/encuadre';
 import { urlApp } from '../nube/cliente';
 import { sincronizar, useNube } from '../nube/jugadas';
 
@@ -91,14 +92,22 @@ export function BarraSuperior() {
     ataque.length > 0 && m + f === 0
       ? 'Sin género'
       : `${m}M-${f}F${ataque.length - m - f > 0 ? ` · ${ataque.length - m - f} s/g` : ''}`;
-  const cambiarVista = (v: Vista) =>
+  // Al pasar a Media o Zona, la jugada se corre para que ningún jugador quede fuera de lo que se ve.
+  const encuadrarCon = (vista: Vista, lado: typeof jugada.lado) => {
+    let ajuste: ReturnType<typeof encuadrar> = null;
     cambiar((j) => {
-      j.vista = v;
+      ajuste = encuadrar(j, vista, lado);
     });
-  const cambiarLado = () =>
-    cambiar((j) => {
-      j.lado = j.lado === 'derecha' ? 'izquierda' : 'derecha';
-    });
+    const a = ajuste as ReturnType<typeof encuadrar>;
+    if (a)
+      avisar(
+        a.escala < 1
+          ? 'Acomodé la jugada (más junta) para que todos quepan en esta vista. Deshacer la devuelve como estaba.'
+          : 'Corrí la jugada para que se vean todos los jugadores. Deshacer la devuelve como estaba.',
+      );
+  };
+  const cambiarVista = (v: Vista) => encuadrarCon(v, jugada.lado);
+  const cambiarLado = () => encuadrarCon(jugada.vista, jugada.lado === 'derecha' ? 'izquierda' : 'derecha');
   const irACuenta = () => {
     cerrarMenu();
     irA(usuario ? '/mis-datos' : '/cuenta');
