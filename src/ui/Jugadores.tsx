@@ -4,6 +4,57 @@ import { pasoActivo, useEditor } from '../estado/editorStore';
 import { aplicarProporcion, fijarCantidad, proporcionDe } from '../estado/jugadores';
 import { usePreferencias } from '../estado/preferencias';
 import { Dialogo } from './Dialogo';
+import { ubicarFormacion, type Carril, type Formacion } from '../modelo/formaciones';
+import { avisar } from '../estado/avisos';
+
+const FORMACIONES: { id: Formacion; nombre: string }[] = [
+  { id: 'vertical', nombre: 'Stack vertical' },
+  { id: 'horizontal', nombre: 'Stack horizontal' },
+];
+const CARRILES: { id: Carril; nombre: string }[] = [
+  { id: 'izquierda', nombre: 'Izquierda' },
+  { id: 'centro', nombre: 'Centro' },
+  { id: 'derecha', nombre: 'Derecha' },
+];
+
+/** Formación del ataque: acomoda el paso abierto y queda para las jugadas nuevas. */
+function FormacionAtaque() {
+  const formacion = usePreferencias((s) => s.formacion);
+  const carril = usePreferencias((s) => s.carril);
+  const pasoActual = useEditor((s) => s.pasoActual);
+  const aplicar = (f: Formacion, c: Carril) => {
+    usePreferencias.getState().actualizar({ formacion: f, carril: c });
+    useEditor.getState().cambiar((_, paso) => ubicarFormacion(paso, f, c));
+    avisar(`Paso ${pasoActual + 1}: ataque en ${f === 'vertical' ? 'stack vertical' : 'stack horizontal'} (${c}). Deshacer lo devuelve.`);
+  };
+  return (
+    <>
+      <div className="campo">
+        <span>Formación del ataque</span>
+        <div className="segmentado" role="group" aria-label="Formación del ataque">
+          {FORMACIONES.map((f) => (
+            <button key={f.id} type="button" aria-pressed={formacion === f.id} onClick={() => aplicar(f.id, carril)}>
+              {f.nombre}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="campo">
+        <span>Lado (mirando hacia donde ataca)</span>
+        <div className="segmentado" role="group" aria-label="Lado de la formación">
+          {CARRILES.map((c) => (
+            <button key={c.id} type="button" aria-pressed={carril === c.id} onClick={() => aplicar(formacion, c.id)}>
+              {c.nombre}
+            </button>
+          ))}
+        </div>
+      </div>
+      <p className="nota">
+        Acomoda a los jugadores del paso {pasoActual + 1} (la defensa marca a su atacante) y queda para las jugadas nuevas.
+      </p>
+    </>
+  );
+}
 
 const NUMEROS = [0, 1, 2, 3, 4, 5, 6, 7];
 const PROPORCIONES: { id: Proporcion; nombre: string; ayuda: string }[] = [
@@ -36,8 +87,9 @@ export function Jugadores({ alCerrar }: { alCerrar: () => void }) {
   const marcada = actual ?? (useEditor.getState().jugada.pasos[0].jugadores.length === 0 ? preferida : null);
 
   return (
-    <Dialogo titulo="Jugadores en cancha" alCerrar={alCerrar} pie={<button className="boton-texto primario" onClick={alCerrar}>Listo</button>}>
+    <Dialogo titulo="Jugadores y formación" alCerrar={alCerrar} pie={<button className="boton-texto primario" onClick={alCerrar}>Listo</button>}>
       <div className="formulario">
+        <FormacionAtaque />
         <Cantidad equipo="ataque" nombre="Ataque" />
         <Cantidad equipo="defensa" nombre="Defensa" />
         <p className="nota">

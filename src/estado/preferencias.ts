@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { COLORES } from '../estilos/colores';
 import type { Proporcion } from '../modelo/fabrica';
+import type { Carril, Formacion } from '../modelo/formaciones';
 
 export interface Preferencias {
   colorAtaque: string;
@@ -14,6 +15,9 @@ export interface Preferencias {
   cantidadDefensa: number;
   /** Match con que empiezan las jugadas nuevas: 4M-3F, 3M-4F o sin género. */
   proporcion: Proporcion;
+  /** Formación del ataque con que empiezan las jugadas nuevas. */
+  formacion: Formacion;
+  carril: Carril;
   /** Muñeco del conteo de 10 sobre la cancha. */
   mostrarConteo: boolean;
   muneco: string;
@@ -33,6 +37,8 @@ export const PREFERENCIAS_INICIALES: Preferencias = {
   cantidadAtaque: 7,
   cantidadDefensa: 7,
   proporcion: 'M',
+  formacion: 'vertical',
+  carril: 'centro',
   mostrarConteo: true,
   muneco: 'alien',
   velocidadConteo: 50,
@@ -63,6 +69,8 @@ export function extraerPreferencias(s: Preferencias): Preferencias {
     cantidadAtaque: cantidadValida(s.cantidadAtaque),
     cantidadDefensa: cantidadValida(s.cantidadDefensa),
     proporcion: s.proporcion === 'F' || s.proporcion === 'N' ? s.proporcion : 'M',
+    formacion: s.formacion === 'horizontal' ? 'horizontal' : 'vertical',
+    carril: s.carril === 'izquierda' || s.carril === 'derecha' ? s.carril : 'centro',
     mostrarConteo: s.mostrarConteo !== false,
     muneco: typeof s.muneco === 'string' ? s.muneco : 'alien',
     velocidadConteo: entre(s.velocidadConteo, 0, 100, 50),

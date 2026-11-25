@@ -94,6 +94,8 @@ export function BarraSuperior() {
       : `${m}M-${f}F${ataque.length - m - f > 0 ? ` · ${ataque.length - m - f} s/g` : ''}`;
   // Al pasar a Media o Zona, la jugada se corre para que ningún jugador quede fuera de lo que se ve.
   const encuadrarCon = (vista: Vista, lado: typeof jugada.lado) => {
+    // En el celular el menú tapa la cancha: se cierra para que se vea el cambio.
+    cerrarMenu();
     let ajuste: ReturnType<typeof encuadrar> = null;
     cambiar((j) => {
       ajuste = encuadrar(j, vista, lado);
@@ -302,7 +304,7 @@ export function BarraSuperior() {
           <hr />
           <button onClick={() => abrir('conteo')}>Conteo de 10…</button>
           <button onClick={() => abrir('jugadores')}>
-            Jugadores y proporción… ({ataque.length} vs {defensa.length})
+            Formación y jugadores… ({ataque.length} vs {defensa.length})
           </button>
           <hr />
           <label className="menu-check">

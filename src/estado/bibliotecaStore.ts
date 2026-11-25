@@ -4,6 +4,7 @@ import { crearJugada, nuevoId } from '../modelo/fabrica';
 import { useEditor } from './editorStore';
 import { cortarAnimacion } from '../animacion/reproductor';
 import { usePreferencias } from './preferencias';
+import { ubicarFormacion } from '../modelo/formaciones';
 
 interface EstadoBiblioteca {
   /** Todas las jugadas guardadas; la que está en el editor también vive aquí. */
@@ -43,7 +44,9 @@ export function abrirJugada(j: Play) {
 /** Jugada nueva con la cantidad de jugadores y la proporción elegidas en Jugadores en cancha. */
 export function nuevaJugada() {
   const p = usePreferencias.getState();
-  abrirJugada(crearJugada(undefined, { ataque: p.cantidadAtaque, defensa: p.cantidadDefensa, proporcion: p.proporcion }));
+  const j = crearJugada(undefined, { ataque: p.cantidadAtaque, defensa: p.cantidadDefensa, proporcion: p.proporcion });
+  ubicarFormacion(j.pasos[0], p.formacion, p.carril);
+  abrirJugada(j);
 }
 
 /** Copia con id y nombre nuevos. */
