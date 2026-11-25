@@ -225,6 +225,74 @@
   gap: 8px;
   margin: 16px 0;
 }
+/* Registro en dos pasos: barra de avance, constancia de aceptación y datos opcionales plegados. */
+.pasos-registro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.pasos-registro div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.pasos-registro i {
+  height: 10px;
+  border: var(--ancho-separador) solid var(--borde);
+  border-radius: var(--radio-chip);
+  background: var(--superficie-2);
+}
+.pasos-registro i.hecho {
+  background: var(--acento);
+}
+.aceptado-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin: 0 0 16px;
+  padding: 8px 14px;
+  border: var(--ancho-separador) solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--superficie-2);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.aceptado-legal svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--borde);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.aceptado-legal span {
+  flex: 1 1 180px;
+}
+.pasos-registro + .nota {
+  margin: 0 0 16px;
+}
+.nota.centrada {
+  margin: 0;
+  text-align: center;
+}
+details.opcionales summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--texto-suave);
+  font-weight: 700;
+  cursor: pointer;
+}
+details.opcionales[open] summary {
+  margin-bottom: 8px;
+}
 .aceptar-y-crear {
   display: flex;
   flex-direction: column;

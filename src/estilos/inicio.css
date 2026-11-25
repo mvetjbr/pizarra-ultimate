@@ -1,0 +1,194 @@
+/* ---------- Pantalla de inicio (crear cuenta, iniciar sesión u omitir) ---------- */
+/* Celular: título, mascota, lema y botones en columna. Computador: mascota a la izquierda, lo demás a la derecha. */
+
+.inicio {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: max(28px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'titulo' 'escena' 'lema' 'botones';
+  align-content: center;
+  justify-items: center;
+  gap: 18px;
+  color: var(--texto);
+}
+.inicio-titulo {
+  grid-area: titulo;
+  margin: 0;
+  font-family: var(--fuente-titulo);
+  font-weight: var(--peso-titulo);
+  font-size: clamp(2.6rem, 11vw, 4.75rem);
+  line-height: 1.02;
+  text-align: center;
+}
+.inicio-escena {
+  grid-area: escena;
+  position: relative;
+  width: min(100%, 340px);
+  aspect-ratio: 330 / 300;
+}
+.inicio-globo {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 2%;
+  margin: 0;
+  padding: 0.3em 0.65em;
+  display: flex;
+  align-items: center;
+  gap: 0.22em;
+  background: var(--superficie);
+  border: var(--borde-grueso);
+  border-radius: 18px;
+  box-shadow: var(--sombra);
+  font-family: var(--fuente-titulo);
+  font-size: clamp(1.35rem, 6.4vw, 2.6rem);
+  line-height: 1.1;
+  transform: rotate(-4deg);
+}
+/* Colita del globo, apuntando a la mascota. */
+.inicio-globo::after {
+  content: '';
+  position: absolute;
+  left: 28%;
+  bottom: -14px;
+  width: 18px;
+  height: 18px;
+  background: var(--superficie);
+  border-left: var(--borde-grueso);
+  border-bottom: var(--borde-grueso);
+  transform: skewY(-38deg);
+}
+.inicio-perro {
+  width: 1.75em;
+  height: 1.75em;
+  margin: -0.15em 0;
+  flex-shrink: 0;
+}
+.inicio-perro .oreja,
+.inicio-perro .tinta {
+  fill: var(--borde);
+}
+.inicio-perro .cabeza {
+  fill: var(--acento);
+  stroke: var(--borde);
+  stroke-width: 1.6;
+}
+.inicio-perro .hocico {
+  fill: var(--superficie);
+  stroke: var(--borde);
+  stroke-width: 1.2;
+}
+.inicio-perro .boca {
+  fill: none;
+  stroke: var(--borde);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+.inicio-ilustracion {
+  position: absolute;
+  inset: 26% 0 0 0;
+}
+.inicio-cancha {
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--fondo-lienzo);
+  border: var(--borde-grueso);
+  border-radius: var(--radio-grande);
+  box-shadow: var(--sombra-grande);
+}
+.inicio-cancha .zona {
+  fill: rgba(0, 0, 0, 0.14);
+}
+.inicio-cancha .linea,
+.inicio-cancha .brick {
+  fill: none;
+  stroke: var(--fondo);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.inicio-cancha .brick {
+  stroke-width: 2.4;
+}
+.inicio-cancha .pasto {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.22);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.inicio-mascota {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  width: 46%;
+  transform: translateX(-50%);
+  overflow: visible;
+}
+.inicio-lema {
+  grid-area: lema;
+  margin: 4px 0 0;
+  max-width: 30ch;
+  text-align: center;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--texto-suave);
+}
+.inicio-botones {
+  grid-area: botones;
+  width: min(100%, 420px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+}
+.inicio-omitir {
+  min-height: 44px;
+  border: none;
+  background: none;
+  color: var(--texto);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+@media (min-width: 860px) {
+  .inicio {
+    padding: 48px 56px;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    grid-template-rows: 1fr auto auto auto 1fr;
+    grid-template-areas:
+      'escena .'
+      'escena titulo'
+      'escena lema'
+      'escena botones'
+      'escena .';
+    column-gap: 64px;
+    row-gap: 22px;
+    justify-items: start;
+  }
+  .inicio-escena {
+    width: min(100%, 520px);
+    align-self: center;
+    justify-self: center;
+  }
+  .inicio-globo {
+    font-size: 2.5rem;
+  }
+  .inicio-titulo,
+  .inicio-lema {
+    text-align: left;
+  }
+  .inicio-lema {
+    font-size: 1.3rem;
+  }
+}

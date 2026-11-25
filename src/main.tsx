@@ -12,6 +12,7 @@ import './estilos/pasos.css';
 import './estilos/biblioteca.css';
 import './estilos/conteo.css';
 import './estilos/cuenta.css';
+import './estilos/inicio.css';
 import './estilos/nube.css';
 import './estilos/tema.css'; // apariencia según el tema activo
 import './estilos/temas-deco.css'; // decoraciones propias de cada tema: siempre el último

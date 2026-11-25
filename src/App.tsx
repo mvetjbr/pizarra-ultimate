@@ -21,6 +21,9 @@ import { Admin } from './ui/cuenta/Admin';
 import { AbrirEnlace, BannerCompartida, useEnlacePendiente } from './ui/AbrirEnlace';
 import { decidirSubida, useNube } from './nube/jugadas';
 import { Dialogo } from './ui/Dialogo';
+import { PantallaInicio } from './ui/cuenta/Inicio';
+import { useInicio } from './estado/inicio';
+import { hayServidor } from './nube/cliente';
 
 /** Primera vez con cuenta en este dispositivo: ¿subir las jugadas que ya había? */
 function PreguntaSubir() {
@@ -68,6 +71,7 @@ function useAtajosTeclado() {
       if (st.presentando) return; // la presentación tiene sus propios atajos
       if (document.querySelector('.fondo-dialogo')) return; // hay una ventana abierta
       if (/^#\/(legal|cuenta|mis-datos)/.test(location.hash)) return; // páginas fuera del editor
+      if (document.querySelector('.inicio')) return; // pantalla de inicio
       const mod = e.ctrlKey || e.metaKey;
       const k = e.key.toLowerCase();
       if (mod && k === 'z' && !e.shiftKey) {
@@ -105,6 +109,11 @@ export default function App() {
   const ruta = useRuta();
   const recuperando = useSesion((s) => s.recuperandoContrasena);
   const debeAceptar = useSesion((s) => !!s.usuario && s.pendientes.length > 0);
+  const sesionLista = useSesion((s) => s.listo);
+  const conUsuario = useSesion((s) => !!s.usuario);
+  const omitioInicio = useInicio((s) => s.omitido);
+  // El inicio sale a quien no ha ingresado ni lo ha omitido en este dispositivo (solo si hay cuentas).
+  const pideInicio = hayServidor && !omitioInicio && !conUsuario;
   useAtajosTeclado();
   useEnlacePendiente();
 
@@ -146,7 +155,14 @@ export default function App() {
         <Aviso />
       </>
     );
-  if (!cargado) return <div className="cargando">Cargando…</div>;
+  if (!cargado || (pideInicio && !sesionLista)) return <div className="cargando">Cargando…</div>;
+  if (pideInicio)
+    return (
+      <>
+        <PantallaInicio />
+        <Aviso />
+      </>
+    );
   if (presentando)
     return (
       <>

@@ -8,7 +8,7 @@ import {
 } from '../../../supabase/functions/_compartido/reglas.ts';
 import { hayServidor, llamarFuncion, supabase, urlApp } from '../../nube/cliente';
 import { recargarSesion, useSesion } from '../../nube/sesion';
-import { AVISO_PRIVACIDAD_CORTO } from '../../legal/documentos';
+import { AVISO_PRIVACIDAD_CORTO, documento } from '../../legal/documentos';
 import { irA, volverAlEditor } from '../../estado/ruta';
 import { avisar } from '../../estado/avisos';
 import { Markdown } from '../Markdown';
@@ -59,6 +59,19 @@ function Campo({
       {ayuda && <small className="ayuda-campo">{ayuda}</small>}
       {error && <small className="error-campo">{error}</small>}
     </label>
+  );
+}
+
+/** Barra de avance del registro: paso 1 (aceptar) y paso 2 (datos). */
+function Pasos({ actual }: { actual: 1 | 2 }) {
+  return (
+    <div className="pasos-registro">
+      <span>Paso {actual} de 2</span>
+      <div aria-hidden="true">
+        <i className="hecho" />
+        <i className={actual === 2 ? 'hecho' : ''} />
+      </div>
+    </div>
   );
 }
 
@@ -144,6 +157,8 @@ function Registro() {
   const [error, setError] = useState('');
   const [ocupado, setOcupado] = useState(false);
   const [listo, setListo] = useState<string | null>(null);
+  // Paso 1: aceptar los documentos legales. Paso 2: los datos. Quien ya las marcó en la página legal va directo al 2.
+  const [paso, setPaso] = useState<1 | 2>(() => (tomarCasillas().terminos && tomarCasillas().privacidad ? 2 : 1));
 
   const cambiar = <K extends keyof Formulario>(k: K, v: Formulario[K]) => setF((x) => ({ ...x, [k]: v }));
   const ambas = casillas.terminos && casillas.privacidad;
@@ -156,7 +171,7 @@ function Registro() {
     setErrores(errs);
     if (Object.keys(errs).length) return;
     if (edad === 'menor_de_14') return setError('Por ahora Pizarra Ultimate es para personas de 14 años o más.');
-    if (!ambas) return;
+    if (!ambas) return setPaso(1);
     setOcupado(true);
     try {
       await llamarFuncion('registro', {
@@ -189,8 +204,39 @@ function Registro() {
     );
   }
 
+  if (paso === 1) {
+    return (
+      <Marco titulo="Antes de crear tu cuenta">
+        <Pasos actual={1} />
+        <p className="nota">Lee y acepta los dos documentos. Guardamos la fecha, la hora y la versión que aceptaste.</p>
+        <div className="formulario">
+          <Casillas valor={casillas} alCambiar={setCasillas} />
+          <button className="boton-texto primario grande" disabled={!ambas} onClick={() => setPaso(2)}>
+            Continuar
+          </button>
+          {!ambas && <p className="nota centrada">Marca las dos casillas para continuar.</p>}
+        </div>
+        <p className="enlaces-cuenta">
+          <span>¿Ya tienes cuenta? <a href="#/cuenta">Ingresar</a></span>
+        </p>
+      </Marco>
+    );
+  }
+
   return (
-    <Marco titulo="Crear cuenta">
+    <Marco titulo="Tus datos">
+      <Pasos actual={2} />
+      <p className="aceptado-legal">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12.5l4.5 4.5L19 7.5" />
+        </svg>
+        <span>
+          Aceptaste Términos {documento('terminos')?.version} y Tratamiento de Datos {documento('privacidad')?.version}
+        </span>
+        <button type="button" className="enlace" onClick={() => setPaso(1)}>
+          Cambiar
+        </button>
+      </p>
       <form className="formulario" onSubmit={enviar} noValidate>
         <div className="fila-campos">
           <Campo etiqueta="Nombre *" error={errores.nombre}>
@@ -221,8 +267,8 @@ function Registro() {
           </p>
         )}
 
-        <fieldset className="opcionales">
-          <legend>Opcional</legend>
+        <details className="opcionales">
+          <summary>Más datos (opcional)</summary>
           <div className="fila-campos">
             <Campo etiqueta="Apodo en cancha" error={errores.apodo} ayuda="Es lo que ven los demás en las jugadas.">
               <input maxLength={30} value={f.apodo} onChange={(e) => cambiar('apodo', e.target.value)} />
@@ -257,9 +303,8 @@ function Registro() {
               ))}
             </select>
           </Campo>
-        </fieldset>
+        </details>
 
-        <Casillas valor={casillas} alCambiar={setCasillas} />
         <div className="aviso-privacidad">
           <Markdown texto={AVISO_PRIVACIDAD_CORTO} />
           <a href="#/legal/privacidad" target="_blank" rel="noopener">
