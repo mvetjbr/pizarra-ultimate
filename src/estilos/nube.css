@@ -1,0 +1,205 @@
+/* ---------- Fases 5B-5E: nube, libros, compartir y administración ---------- */
+
+/* Con cuatro pestañas en el celular, la fila se desliza en vez de partirse. */
+.pestanas {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pestanas button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.fila-botones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+.fila-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.fila-opciones .campo {
+  flex: 1 1 150px;
+}
+.campo select {
+  min-height: var(--toque);
+  padding: 0 8px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--superficie);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--texto);
+}
+.nota.error,
+small.error {
+  color: var(--peligro);
+  font-weight: 600;
+}
+
+/* Listas de filas (compartido conmigo, libros, accesos, administración) */
+.lista-filas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lista-filas > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--superficie);
+}
+.lista-filas.compacta > li {
+  padding: 4px 8px;
+}
+.fila-principal {
+  display: flex;
+  flex: 1 1 220px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-height: var(--toque);
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  color: inherit;
+}
+.fila-principal small {
+  color: var(--texto-suave);
+}
+.fila-principal p {
+  margin: 4px 0 0;
+}
+.fila-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.etiqueta-permiso,
+.etiqueta-estado {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--primario-claro);
+  color: var(--primario);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.etiqueta-permiso.ver {
+  background: #e8eefc;
+  color: #1e4fd8;
+}
+.etiqueta-estado.recibido,
+.etiqueta-estado.recibida {
+  background: #fff4d6;
+  color: #7a5200;
+}
+.etiqueta-estado.retirado {
+  background: #fdecea;
+  color: var(--peligro);
+}
+
+/* Panel Compartir con permisos */
+.panel-compartir {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--borde);
+}
+.panel-compartir h3,
+.panel-compartir h4 {
+  margin: 8px 0 0;
+}
+.lista-accesos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lista-accesos li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.lista-accesos li > span {
+  display: flex;
+  flex: 1 1 160px;
+  flex-direction: column;
+}
+.lista-accesos small {
+  color: var(--texto-suave);
+}
+.lista-accesos select {
+  min-height: var(--toque);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--superficie);
+}
+
+/* Libro de jugadas */
+.detalle-libro h3 {
+  margin: 4px 0;
+}
+.elegir-jugada {
+  max-height: 260px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px dashed var(--borde);
+  border-radius: var(--radio);
+}
+.tarjeta-svg.vacia {
+  aspect-ratio: 100 / 37;
+  background: var(--fondo-cancha);
+}
+
+/* Franja de jugada compartida (encima de la cancha) */
+.banner-compartida {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 6px 10px;
+  background: #e8eefc;
+  border-bottom: 1px solid #b9c8f3;
+  font-size: 0.9rem;
+}
+.banner-compartida span {
+  flex: 1 1 200px;
+}
+.banner-compartida .boton-texto {
+  min-height: 36px;
+}
+/* La franja ocupa una fila más en la columna central. */
+.columna:has(.banner-compartida) {
+  grid-template-rows: auto 1fr auto;
+}
+
+/* Estado de la sincronización en el menú «⋯» */
+.menu-lista > .estado-nube {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+.menu-lista > .estado-nube.error,
+.menu-lista > .estado-nube.sin-conexion {
+  color: var(--peligro);
+}

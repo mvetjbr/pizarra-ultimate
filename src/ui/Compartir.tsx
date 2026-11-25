@@ -9,6 +9,10 @@ import { compartirArchivo, descargar, nombreArchivo, puedeCompartirArchivos } fr
 import { jsonDeJugadas } from '../exportar/json';
 import type { Contexto } from '../exportar/imagen';
 import { Dialogo } from './Dialogo';
+import { PanelCompartir } from './PanelCompartir';
+import { useSesion } from '../nube/sesion';
+import { irA } from '../estado/ruta';
+import { hayServidor } from '../nube/cliente';
 
 async function copiar(texto: string): Promise<boolean> {
   try {
@@ -30,6 +34,29 @@ function contextoActual(): Contexto {
 }
 
 type Tarea = 'png' | 'gif' | 'video' | null;
+
+/** Compartir con permisos (necesita cuenta). Una jugada de otra persona no se puede volver a compartir. */
+function SeccionNube({ nombre, id }: { nombre: string; id: string }) {
+  const usuario = useSesion((s) => s.usuario);
+  const compartida = useEditor((s) => s.compartida);
+  if (compartida)
+    return (
+      <section className="seccion-compartir">
+        <p className="nota">Esta jugada es de {compartida.autor}: solo esa persona puede compartirla. Puedes guardar una copia y compartir la tuya.</p>
+      </section>
+    );
+  if (!usuario)
+    return (
+      <section className="seccion-compartir">
+        <h3>Compartir con permisos</h3>
+        <p className="nota">Con una cuenta puedes compartir con permiso de ver o editar, y quitar el acceso cuando quieras.</p>
+        <button className="boton-texto" onClick={() => irA('/cuenta')}>
+          Ingresar o crear cuenta
+        </button>
+      </section>
+    );
+  return <PanelCompartir tipo="play" id={id} titulo={nombre} />;
+}
 
 /** Enlace para WhatsApp, imagen PNG del paso, animación (GIF/video) y respaldo JSON. */
 export function Compartir({ alCerrar }: { alCerrar: () => void }) {
@@ -106,6 +133,7 @@ export function Compartir({ alCerrar }: { alCerrar: () => void }) {
 
   return (
     <Dialogo titulo="Compartir y exportar" alCerrar={() => !ocupado && alCerrar()}>
+      {hayServidor && <SeccionNube nombre={jugada.nombre} id={jugada.id} />}
       <section className="seccion-compartir">
         <h3>Enlace</h3>
         <p className="nota">

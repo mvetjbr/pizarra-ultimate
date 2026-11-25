@@ -75,6 +75,8 @@ export async function iniciarPersistencia() {
   const guardarYa = () => {
     clearTimeout(temporizador);
     temporizador = undefined;
+    // Una jugada compartida por otra persona no se mezcla con la biblioteca propia.
+    if (useEditor.getState().compartida) return;
     const j = useEditor.getState().jugada;
     useBiblioteca.getState().upsert(j);
     set(CLAVE_JUGADA, j).catch((e) => console.warn('No se pudo guardar', e));
@@ -82,7 +84,7 @@ export async function iniciarPersistencia() {
   useEditor.subscribe((s, prev) => {
     if (s.jugada === prev.jugada) return;
     // Al cambiar de jugada se guarda de inmediato la anterior para no perder sus últimos cambios.
-    if (s.jugada.id !== prev.jugada.id) useBiblioteca.getState().upsert(prev.jugada);
+    if (s.jugada.id !== prev.jugada.id && !prev.compartida) useBiblioteca.getState().upsert(prev.jugada);
     clearTimeout(temporizador);
     temporizador = setTimeout(guardarYa, 250);
   });

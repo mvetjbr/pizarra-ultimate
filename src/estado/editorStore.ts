@@ -12,6 +12,14 @@ export interface Seleccion {
 
 type Receta = (jugada: Play, paso: Step) => void;
 
+/** Jugada de otra persona abierta desde "Compartido conmigo" (no vive en la biblioteca propia). */
+export interface Compartida {
+  id: string;
+  permiso: 'ver' | 'editar';
+  autor: string;
+  version: number;
+}
+
 const LIMITE_HISTORIAL = 100;
 
 interface EstadoEditor {
@@ -26,6 +34,7 @@ interface EstadoEditor {
   pendiente: Play | null;
   cargado: boolean;
   presentando: boolean;
+  compartida: Compartida | null;
 
   setHerramienta: (h: Herramienta) => void;
   seleccionar: (s: Seleccion | null) => void;
@@ -84,6 +93,7 @@ export const useEditor = create<EstadoEditor>((set, get) => ({
   pendiente: null,
   cargado: false,
   presentando: false,
+  compartida: null,
 
   setHerramienta: (herramienta) => set({ herramienta, seleccion: null }),
   seleccionar: (seleccion) => set({ seleccion }),
@@ -147,6 +157,8 @@ export const useEditor = create<EstadoEditor>((set, get) => ({
       pendiente: null,
       pasado: conHistorial ? [...s.pasado, s.jugada].slice(-LIMITE_HISTORIAL) : [],
       futuro: [],
+      // Abrir otra jugada (sin historial) sale del modo "compartida"; quien la abre lo vuelve a fijar.
+      compartida: conHistorial ? s.compartida : null,
     })),
 
   agregarFlecha: (f) => {

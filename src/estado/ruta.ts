@@ -7,7 +7,9 @@ export type Ruta =
   | { pantalla: 'editor' }
   | { pantalla: 'legal'; tipo: string; version?: string }
   | { pantalla: 'cuenta'; modo: 'ingresar' | 'registro' | 'recuperar' }
-  | { pantalla: 'mis-datos' };
+  | { pantalla: 'mis-datos' }
+  | { pantalla: 'admin' }
+  | { pantalla: 'enlace'; token: string };
 
 export function leerRuta(hash = location.hash): Ruta {
   const partes = hash.replace(/^#\/?/, '').split('/').filter(Boolean);
@@ -17,6 +19,9 @@ export function leerRuta(hash = location.hash): Ruta {
     return { pantalla: 'cuenta', modo };
   }
   if (partes[0] === 'mis-datos') return { pantalla: 'mis-datos' };
+  if (partes[0] === 'admin') return { pantalla: 'admin' };
+  // Enlace para compartir de la nube: #/c/<token>
+  if (partes[0] === 'c' && partes[1] && /^[0-9a-f]{32,128}$/.test(partes[1])) return { pantalla: 'enlace', token: partes[1] };
   return { pantalla: 'editor' };
 }
 

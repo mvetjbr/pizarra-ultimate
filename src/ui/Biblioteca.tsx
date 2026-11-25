@@ -1,4 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
+import { create } from 'zustand';
+import { hayServidor } from '../nube/cliente';
+import { DetalleLibro, PestanaCompartido, PestanaLibros } from './Nube';
 import type { Categoria, Play } from '../modelo/tipos';
 import { CATEGORIAS } from '../modelo/tipos';
 import { useEditor } from '../estado/editorStore';
@@ -17,6 +20,10 @@ import { jsonDeJugadas, leerArchivoJugadas } from '../exportar/json';
 import { Dialogo } from './Dialogo';
 
 type Filtro = Categoria | 'Todas';
+type Pestana = 'mias' | 'libros' | 'compartido' | 'plantillas';
+
+/** Para abrir la biblioteca directo en una pestaña o un libro (p. ej. desde un enlace compartido). */
+export const useDestinoBiblioteca = create<{ pestana: Pestana; libro: string | null }>(() => ({ pestana: 'mias', libro: null }));
 
 const sinTildes = (s: string) =>
   s
@@ -111,7 +118,17 @@ function TarjetaPlantilla({ p, vista, alUsar }: { p: Plantilla; vista: Play; alU
 }
 
 export function Biblioteca({ alCerrar }: { alCerrar: () => void }) {
-  const [pestana, setPestana] = useState<'mias' | 'plantillas'>('mias');
+  const [pestana, setPestanaLocal] = useState<Pestana>(() => useDestinoBiblioteca.getState().pestana);
+  const [libro, setLibro] = useState<string | null>(() => useDestinoBiblioteca.getState().libro);
+  const setPestana = (p: Pestana) => {
+    setPestanaLocal(p);
+    setLibro(null);
+    useDestinoBiblioteca.setState({ pestana: p, libro: null });
+  };
+  const verLibro = (id: string | null) => {
+    setLibro(id);
+    useDestinoBiblioteca.setState({ libro: id });
+  };
   const [busqueda, setBusqueda] = useState('');
   const [categoria, setCategoria] = useState<Filtro>('Todas');
   const jugadas = useBiblioteca((s) => s.jugadas);
@@ -188,10 +205,28 @@ export function Biblioteca({ alCerrar }: { alCerrar: () => void }) {
         <button role="tab" aria-selected={pestana === 'mias'} onClick={() => setPestana('mias')}>
           Mis jugadas ({jugadas.length})
         </button>
+        {hayServidor && (
+          <>
+            <button role="tab" aria-selected={pestana === 'libros'} onClick={() => setPestana('libros')}>
+              Mis libros
+            </button>
+            <button role="tab" aria-selected={pestana === 'compartido'} onClick={() => setPestana('compartido')}>
+              Compartido conmigo
+            </button>
+          </>
+        )}
         <button role="tab" aria-selected={pestana === 'plantillas'} onClick={() => setPestana('plantillas')}>
           Plantillas ({PLANTILLAS.length})
         </button>
       </div>
+      {libro ? (
+        <DetalleLibro id={libro} alVolver={() => verLibro(null)} alCerrar={alCerrar} />
+      ) : pestana === 'libros' ? (
+        <PestanaLibros alVerLibro={verLibro} />
+      ) : pestana === 'compartido' ? (
+        <PestanaCompartido alCerrar={alCerrar} alVerLibro={verLibro} />
+      ) : (
+      <>
       <div className="filtros">
         <input
           type="search"
@@ -236,6 +271,8 @@ export function Biblioteca({ alCerrar }: { alCerrar: () => void }) {
         </ul>
       ) : (
         <p className="vacio">No hay plantillas en esta categoría.</p>
+      )}
+      </>
       )}
     </Dialogo>
   );

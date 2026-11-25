@@ -29,6 +29,34 @@ import { Jugadores } from './Jugadores';
 import { AjustesConteo } from '../conteo/AjustesConteo';
 import { proporcionValida } from '../estado/jugadores';
 import { useOrientacionAutomatica } from '../estado/pantalla';
+import { urlApp } from '../nube/cliente';
+import { sincronizar, useNube } from '../nube/jugadas';
+
+const TEXTO_NUBE = {
+  apagada: '',
+  sincronizando: 'Sincronizando…',
+  'al-dia': 'Jugadas al día en tu cuenta',
+  'sin-conexion': 'Sin conexión: se sincroniza al volver',
+  error: 'No se pudo sincronizar. Toca para reintentar',
+} as const;
+
+async function invitar() {
+  const texto = `Te invito a Pizarra Ultimate para diseñar y compartir jugadas de Ultimate. Crea tu cuenta aquí: ${urlApp()}`;
+  if (typeof navigator.share === 'function') {
+    try {
+      await navigator.share({ title: 'Pizarra Ultimate', text: texto });
+      return;
+    } catch (e) {
+      if ((e as DOMException)?.name === 'AbortError') return;
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(texto);
+    avisar('Invitación copiada. Pégala en WhatsApp.');
+  } catch {
+    window.prompt('Copia la invitación:', texto);
+  }
+}
 
 const VISTAS: { id: Vista; nombre: string }[] = [
   { id: 'completa', nombre: 'Completa' },
@@ -51,6 +79,7 @@ export function BarraSuperior() {
   const usuario = useSesion((s) => s.usuario);
   const perfil = useSesion((s) => s.perfil);
   const orientacionAutomatica = useOrientacionAutomatica();
+  const estadoNube = useNube((s) => s.estado);
 
   const ataque = paso.jugadores.filter((j) => j.equipo === 'ataque');
   const defensa = paso.jugadores.filter((j) => j.equipo === 'defensa');
@@ -223,6 +252,31 @@ export function BarraSuperior() {
             Cuadrícula cada 5 m
           </label>
           <hr className="solo-movil" />
+          {hayServidor && usuario && estadoNube !== 'apagada' && (
+            <button className={`estado-nube ${estadoNube}`} onClick={() => void sincronizar()}>
+              ☁ {TEXTO_NUBE[estadoNube]}
+            </button>
+          )}
+          {hayServidor && (
+            <button
+              onClick={() => {
+                cerrarMenu();
+                void invitar();
+              }}
+            >
+              Invitar a la app…
+            </button>
+          )}
+          {perfil?.es_admin && (
+            <button
+              onClick={() => {
+                cerrarMenu();
+                irA('/admin');
+              }}
+            >
+              Administración
+            </button>
+          )}
           <button onClick={() => abrir('detalles')}>Detalles y notas de la jugada…</button>
           <button onClick={() => abrir('roster')}>
             Roster del equipo…
