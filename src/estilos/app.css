@@ -649,3 +649,35 @@ button:disabled {
     font-size: 0.78rem;
   }
 }
+
+/* ---------- Ventana "Instalar la app" ---------- */
+.instalar-directo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+}
+.instalar-directo p {
+  margin: 0;
+}
+.dialogo .pestanas {
+  overflow-x: auto;
+}
+.dialogo .pestanas button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.guia-instalar h3 {
+  margin: 12px 0 4px;
+  font-size: 0.95rem;
+}
+.guia-instalar ol,
+.guia-instalar ul {
+  margin: 0;
+  padding-left: 22px;
+  line-height: 1.45;
+}
+.guia-instalar li + li {
+  margin-top: 4px;
+}

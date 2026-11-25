@@ -4,7 +4,7 @@ import { pasoActivo, useEditor } from '../estado/editorStore';
 import { usePreferencias } from '../estado/preferencias';
 import { nuevaJugada } from '../estado/bibliotecaStore';
 import { useVentana, type Ventana } from '../estado/ventanas';
-import { esIOS, instalar, useInstalacion } from '../estado/instalacion';
+import { useInstalacion } from '../estado/instalacion';
 import { avisar } from '../estado/avisos';
 import { cortarAnimacion } from '../animacion/reproductor';
 import { hayServidor } from '../nube/cliente';
@@ -28,6 +28,7 @@ import { Roster } from './Roster';
 import { Jugadores } from './Jugadores';
 import { AjustesConteo } from '../conteo/AjustesConteo';
 import { Estilos } from './Estilos';
+import { Instalar } from './Instalar';
 import { proporcionValida } from '../estado/jugadores';
 import { useOrientacionAutomatica } from '../estado/pantalla';
 import { encuadrar } from '../modelo/encuadre';
@@ -75,7 +76,6 @@ export function BarraSuperior() {
   const prefs = usePreferencias();
   const ventana = useVentana((s) => s.ventana);
   const cerrar = useVentana((s) => s.cerrar);
-  const puedeInstalar = useInstalacion((s) => !!s.evento);
   const instalada = useInstalacion((s) => s.instalada);
   const menu = useRef<HTMLDetailsElement>(null);
   const usuario = useSesion((s) => s.usuario);
@@ -361,21 +361,10 @@ export function BarraSuperior() {
           >
             Términos, privacidad y créditos
           </button>
-          {!instalada && (
-            <>
-              <hr />
-              <button
-                onClick={async () => {
-                  cerrarMenu();
-                  if (puedeInstalar) await instalar();
-                  else if (esIOS()) avisar('En iPhone: toca Compartir ⬆️ y luego «Agregar a inicio».');
-                  else avisar('Usa el menú del navegador: «Instalar app» o «Agregar a la pantalla principal».');
-                }}
-              >
-                Instalar en este dispositivo
-              </button>
-            </>
-          )}
+          <hr />
+          <button onClick={() => abrir('instalar')}>
+            {instalada ? 'Ayuda de instalación…' : 'Instalar en este dispositivo…'}
+          </button>
         </div>
       </details>
 
@@ -386,6 +375,7 @@ export function BarraSuperior() {
       {ventana === 'jugadores' && <Jugadores alCerrar={cerrar} />}
       {ventana === 'conteo' && <AjustesConteo alCerrar={cerrar} />}
       {ventana === 'estilos' && <Estilos alCerrar={cerrar} />}
+      {ventana === 'instalar' && <Instalar alCerrar={cerrar} />}
     </header>
   );
 }
