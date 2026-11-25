@@ -1,0 +1,5 @@
+.venv/
+.bin/
+out/
+modelos/*.pt
+__pycache__/
