@@ -216,7 +216,7 @@ export function PanelPropiedades() {
             }
           />
         )}
-        {f.tipo === 'pase' && f.curva && <p className="nota">Arrastra el punto celeste para curvar el pase (IO, OI, hammer).</p>}
+        {f.tipo === 'pase' && f.curva && <p className="nota">Arrastra el punto celeste: el disco pasará justo por donde lo dejes (IO, OI, hammer).</p>}
       </>
     );
   } else if (sel.tipo === 'zona') {

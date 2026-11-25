@@ -10,6 +10,7 @@ import {
   jugadorCercano,
   OFFSET_DISCO,
   posDisco,
+  puntoEnCurva,
   RADIO_JUGADOR,
 } from '../modelo/geometria';
 import { pasoActivo, useEditor, type TipoSeleccion } from '../estado/editorStore';
@@ -319,8 +320,18 @@ export function Pizarra() {
           const lista: { id: string; x: number; y: number }[] = g.tipo === 'jugador' ? paso.jugadores : g.tipo === 'texto' ? paso.textos : paso.zonas;
           const el = lista.find((x) => x.id === g.id);
           if (el) {
-            el.x = p.x + g.dx;
-            el.y = p.y + g.dy;
+            const dx = p.x + g.dx - el.x;
+            const dy = p.y + g.dy - el.y;
+            el.x += dx;
+            el.y += dy;
+            // Los pases curvos de este jugador conservan su forma: la curva se desplaza con él.
+            if (g.tipo === 'jugador') {
+              for (const f of paso.flechas) {
+                if (!f.control) continue;
+                const k = (f.desdeId === g.id ? 0.5 : 0) + (f.hastaId === g.id ? 0.5 : 0);
+                if (k) f.control = { x: f.control.x + dx * k, y: f.control.y + dy * k };
+              }
+            }
           }
         });
         break;
@@ -342,7 +353,11 @@ export function Pizarra() {
         moverGesto((_, paso) => {
           const f = paso.flechas.find((x) => x.id === g.id);
           if (!f) return;
-          if (g.extremo === 'control') f.control = p;
+          if (g.extremo === 'control') {
+            // El punto que se arrastra está sobre la curva (su mitad): el pase pasa justo por el dedo.
+            const { a, b } = extremos(paso, f);
+            f.control = { x: 2 * p.x - (a.x + b.x) / 2, y: 2 * p.y - (a.y + b.y) / 2 };
+          }
           else if (g.extremo === 'desde') {
             f.desde = p;
             f.desdeId = undefined;
@@ -458,22 +473,13 @@ export function Pizarra() {
         const { a, b, ancladoA, ancladoB } = extremos(paso, f);
         const c = controlDe(f, a, b);
         const { a2, b2 } = geometriaFlecha(a, b, c, ancladoA, ancladoB);
+        // La manija de la curva va sobre la curva misma (en su mitad), no en el punto de control.
+        const medio = c ? puntoEnCurva(a, c, b, 0.5) : null;
         manijas = (
           <g>
-            {c && (
-              <polyline
-                points={`${a.x},${a.y} ${c.x},${c.y} ${b.x},${b.y}`}
-                fill="none"
-                stroke={COLORES.seleccion}
-                strokeWidth={1}
-                strokeDasharray="4 4"
-                vectorEffect="non-scaling-stroke"
-                pointerEvents="none"
-              />
-            )}
             {manija('a', f.id, 'desde', a2)}
             {manija('b', f.id, 'hasta', b2)}
-            {c && manija('c', f.id, 'control', c, COLORES.seleccion)}
+            {medio && manija('c', f.id, 'control', medio, COLORES.seleccion)}
           </g>
         );
       }
