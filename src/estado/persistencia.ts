@@ -13,6 +13,7 @@ const CLAVE_JUGADA = 'pizarra:jugada-actual';
 const CLAVE_BIBLIOTECA = 'pizarra:biblioteca';
 const CLAVE_PREFS = 'pizarra:preferencias';
 const CLAVE_ROSTER = 'pizarra:roster';
+const CLAVE_CARPETAS = 'pizarra:carpetas';
 
 /** Abre una jugada recibida por enlace directamente en modo presentación. */
 function abrirEnlaceCompartido() {
@@ -50,6 +51,13 @@ export async function iniciarPersistencia() {
     if (p) usePreferencias.getState().actualizar(p);
   } catch (e) {
     console.warn('No se pudieron leer las preferencias', e);
+  }
+  try {
+    const c = await get<unknown>(CLAVE_CARPETAS);
+    if (Array.isArray(c))
+      useBiblioteca.setState({ carpetas: c.filter((x): x is string => typeof x === 'string').map((x) => x.slice(0, 40)) });
+  } catch (e) {
+    console.warn('No se pudieron leer las carpetas', e);
   }
   try {
     const r = await get<unknown>(CLAVE_ROSTER);
@@ -90,6 +98,7 @@ export async function iniciarPersistencia() {
   });
   useBiblioteca.subscribe((s, prev) => {
     if (s.jugadas !== prev.jugadas) set(CLAVE_BIBLIOTECA, s.jugadas).catch((e) => console.warn('No se pudo guardar la biblioteca', e));
+    if (s.carpetas !== prev.carpetas) set(CLAVE_CARPETAS, s.carpetas).catch(() => {});
   });
   // Guardar antes de que el celular cierre o esconda la pestaña.
   const alSalir = () => {

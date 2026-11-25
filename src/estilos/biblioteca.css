@@ -131,6 +131,22 @@
   font-weight: 600;
   white-space: nowrap;
 }
+.chip-nueva {
+  border-style: dashed;
+  color: var(--primario);
+}
+.acciones-carpeta {
+  margin: 0 0 10px;
+}
+.selector-carpeta {
+  flex: 1 1 100%;
+  min-height: 40px;
+  padding: 0 8px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--superficie);
+  font-size: 0.9rem;
+}
 .chip[aria-pressed='true'] {
   background: var(--primario);
   border-color: var(--primario);

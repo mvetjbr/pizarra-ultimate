@@ -13,10 +13,57 @@ interface EstadoBiblioteca {
   eliminar: (id: string) => void;
   /** Agrega jugadas importadas (con id nuevo si ya existe). Devuelve las agregadas. */
   importar: (js: Play[]) => Play[];
+  /** Carpetas creadas (también las vacías). Las de las jugadas se suman al mostrarlas. */
+  carpetas: string[];
+}
+
+const limpiarNombre = (s: string) => s.trim().replace(/\s+/g, ' ').slice(0, 40);
+
+/** Todas las carpetas: las creadas y las que tienen jugadas, en orden alfabético. */
+export function listaCarpetas(carpetas: string[], jugadas: Play[]): string[] {
+  const todas = new Set(carpetas);
+  for (const j of jugadas) if (j.carpeta) todas.add(j.carpeta);
+  return [...todas].sort((a, b) => a.localeCompare(b, 'es'));
+}
+
+export function crearCarpeta(nombre: string): string | null {
+  const n = limpiarNombre(nombre);
+  if (!n) return null;
+  useBiblioteca.setState((s) => (s.carpetas.includes(n) ? {} : { carpetas: [...s.carpetas, n] }));
+  return n;
+}
+
+/** Mueve una jugada a una carpeta (o la saca de toda carpeta con undefined). */
+export function moverACarpeta(id: string, carpeta: string | undefined) {
+  const ed = useEditor.getState();
+  // La jugada abierta se cambia en el editor, si no el guardado automático la devolvería a como estaba.
+  if (ed.jugada.id === id && !ed.compartida) {
+    ed.cambiar((j) => {
+      j.carpeta = carpeta;
+    });
+    return;
+  }
+  const j = useBiblioteca.getState().jugadas.find((x) => x.id === id);
+  if (j) useBiblioteca.getState().upsert({ ...j, carpeta, editada: Date.now() });
+}
+
+export function renombrarCarpeta(vieja: string, nueva: string): string | null {
+  const n = limpiarNombre(nueva);
+  if (!n || n === vieja) return null;
+  for (const j of useBiblioteca.getState().jugadas) if (j.carpeta === vieja) moverACarpeta(j.id, n);
+  useBiblioteca.setState((s) => ({ carpetas: [...new Set(s.carpetas.map((c) => (c === vieja ? n : c)))] }));
+  return n;
+}
+
+/** Borra la carpeta; sus jugadas no se borran, quedan sin carpeta. */
+export function borrarCarpeta(nombre: string) {
+  for (const j of useBiblioteca.getState().jugadas) if (j.carpeta === nombre) moverACarpeta(j.id, undefined);
+  useBiblioteca.setState((s) => ({ carpetas: s.carpetas.filter((c) => c !== nombre) }));
 }
 
 export const useBiblioteca = create<EstadoBiblioteca>((set, get) => ({
   jugadas: [],
+  carpetas: [],
   upsert: (j) =>
     set((s) => {
       const i = s.jugadas.findIndex((x) => x.id === j.id);
@@ -42,10 +89,11 @@ export function abrirJugada(j: Play) {
 }
 
 /** Jugada nueva con la cantidad de jugadores y la proporción elegidas en Jugadores en cancha. */
-export function nuevaJugada() {
+export function nuevaJugada(carpeta?: string) {
   const p = usePreferencias.getState();
   const j = crearJugada(undefined, { ataque: p.cantidadAtaque, defensa: p.cantidadDefensa, proporcion: p.proporcion });
   ubicarFormacion(j.pasos[0], p.formacion, p.carril);
+  if (carpeta) j.carpeta = carpeta;
   abrirJugada(j);
 }
 

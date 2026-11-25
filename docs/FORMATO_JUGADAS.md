@@ -32,6 +32,7 @@ También sirve una lista `[JUGADA, ...]` o una sola `JUGADA`.
 | `id` | texto único (máx. 40 caracteres), ej. `"video-001"` |
 | `nombre` | título de la jugada |
 | `categoria` | `"Ataque"`, `"Defensa"`, `"Pull"`, `"Zona"`, `"Punto final"` u `"Otro"` |
+| `carpeta` | (opcional) carpeta de la biblioteca donde queda, ej. `"Videos Nacionales 2025"` (máx. 40 caracteres) |
 | `etiquetas` | lista de textos cortos, ej. `["vertical", "video Nacionales"]` |
 | `notas` | texto libre (minuto del video, explicación) |
 | `creada`, `editada` | fecha en milisegundos (ej. `1764000000000`) |
