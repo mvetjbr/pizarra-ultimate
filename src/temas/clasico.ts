@@ -55,7 +55,8 @@ export const clasico: Tema = {
     cuadricula: '#ffffff',
   },
   ataque: { forma: 'circulo', relleno: '#dca43a', borde: '#f5ead3', anchoBorde: 0.18, texto: '#1e2a33' },
-  defensa: { forma: 'triangulo', relleno: '#ffffff', borde: '#e6785e', anchoBorde: 0.32, texto: '#e6785e' },
+  // El número va en coral oscuro (5,4:1 sobre blanco); el borde sigue en coral.
+  defensa: { forma: 'triangulo', relleno: '#ffffff', borde: '#e6785e', anchoBorde: 0.32, texto: '#b8432f' },
   flechas: { corteAtaque: '#dca43a', corteDefensa: '#e6785e', pase: '#ffffff', defensa: '#e6785e' },
   disco: { relleno: '#ffffff', borde: '#8a8a8a' },
   seleccion: '#00e5ff',

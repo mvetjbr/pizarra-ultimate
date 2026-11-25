@@ -51,7 +51,7 @@ Cada persona elige el estilo en **⋯ → Estilos…**. El cambio se aplica al i
   - Colores: fondo `#f6ecd9`, texto `#1d140d`, índigo `#23305e`, ocre `#e0a526`, terracota `#b8482a`, verde `#1f6b45`.
   - Fuentes: Bricolage Grotesque 800 en los títulos y DM Sans en el resto.
   - Decoración: franja kente de 14 px bajo el encabezado y zigzag ocre sobre los controles.
-  - Jugadores: ataque en círculo ocre; defensa en triángulo terracota con contorno crema.
+  - Jugadores: ataque en círculo ocre (, apenas más claro que el ocre de la interfaz para llegar a 3:1 sobre el verde); defensa en triángulo terracota con contorno crema.
   - Botones índigo con ícono ocre; "Jugadores" y "Presentar" en terracota. Barra de herramientas oscura con la herramienta activa en ocre.
   - Patrones geométricos y abstractos; nada de caricaturas ni estereotipos.
 
@@ -176,7 +176,7 @@ Siguen la regla del Estilo Orgánico, recoloreada con los acentos de este estilo
 - **Césped y líneas:** el césped va en `--cesped` y las zonas en `--cesped-zona`, con líneas en `--linea-cancha`.
 - **Colores por defecto:**
   - ataque: `--mostaza` con borde crema;
-  - defensa: triángulo crema con borde `--coral`;
+  - defensa: triángulo crema con borde `--coral` y número en coral oscuro `#b8432f` (5,4:1);
   - pase: crema;
   - movimiento defensivo: `--coral`.
 - Cada persona puede cambiar los colores de equipo en el menú; estos son solo los valores iniciales.

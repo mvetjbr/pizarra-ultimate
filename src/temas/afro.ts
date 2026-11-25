@@ -56,7 +56,8 @@ export const afro: Tema = {
     cuadricula: '#f6ecd9',
   },
   // Ataque: círculo ocre con borde oscuro · Defensa: triángulo terracota con contorno crema.
-  ataque: { forma: 'circulo', relleno: '#e0a526', borde: '#1d140d', anchoBorde: 0.2, texto: '#1d140d' },
+  // Ocre un poco más claro en la ficha para llegar a 3:1 sobre el verde de la cancha.
+  ataque: { forma: 'circulo', relleno: '#e4ab2e', borde: '#1d140d', anchoBorde: 0.2, texto: '#1d140d' },
   defensa: { forma: 'triangulo', relleno: '#b8482a', borde: '#f6ecd9', anchoBorde: 0.22, texto: '#f6ecd9' },
   flechas: { corteAtaque: '#e0a526', corteDefensa: '#f2b8a3', pase: '#f6ecd9', defensa: '#f2b8a3' },
   disco: { relleno: '#ffffff', borde: '#1d140d' },
