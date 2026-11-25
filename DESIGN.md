@@ -142,6 +142,7 @@ Variables: `--fuente-titulo: 'Shrikhand', 'Work Sans', system-ui, sans-serif;` y
 - **Bloques planos:** cada zona va en un color plano (barras en crema-2, activo en petróleo), sin degradados ni transparencias decorativas.
 - **Estado activo / elegido:** fondo `--petroleo` con texto `--crema`. Si el bloque es claro, fondo `--mostaza` con texto `--tinta`.
 - **Foco del teclado:** contorno de 3 px en `--coral` con 2 px de separación.
+- **Bloque de aceptación legal** (al final de Términos y Privacidad): tarjeta con borde grueso, `--sombra-grande`, título en Shrikhand y el botón principal grande; deshabilitado hasta marcar las dos casillas.
 
 ## Tamaños (densidad compacta: la cancha manda)
 

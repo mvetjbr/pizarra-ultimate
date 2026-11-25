@@ -225,6 +225,24 @@
   gap: 8px;
   margin: 16px 0;
 }
+.aceptar-y-crear {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 28px;
+  padding: 18px 16px;
+  border: var(--borde-grueso);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  box-shadow: var(--sombra-grande);
+}
+.aceptar-y-crear h2 {
+  margin: 0;
+}
+.aceptar-y-crear .nota,
+.aceptar-y-crear .enlaces-cuenta {
+  margin: 0;
+}
 .pie-legal {
   margin-top: 28px;
   color: var(--texto-suave);

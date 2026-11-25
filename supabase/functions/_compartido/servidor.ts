@@ -2,7 +2,7 @@
 import { createClient, type SupabaseClient, type User } from 'npm:@supabase/supabase-js@2.45.4';
 
 const ORIGENES = (Deno.env.get('ORIGENES_PERMITIDOS') ??
-  'https://pizarra-ultimate.pages.dev,https://mvetjbr.github.io,http://localhost:5173,http://localhost:4173')
+  'https://prueba.pizarra-ultimate.pages.dev,https://pizarra-ultimate.pages.dev,https://mvetjbr.github.io,http://localhost:5173,http://localhost:4173')
   .split(',')
   .map((o) => o.trim())
   .filter(Boolean);

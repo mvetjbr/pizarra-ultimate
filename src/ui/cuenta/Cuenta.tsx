@@ -12,7 +12,7 @@ import { AVISO_PRIVACIDAD_CORTO } from '../../legal/documentos';
 import { irA, volverAlEditor } from '../../estado/ruta';
 import { avisar } from '../../estado/avisos';
 import { Markdown } from '../Markdown';
-import { armarAceptaciones, Casillas, CASILLAS_VACIAS, type EstadoCasillas } from './Casillas';
+import { armarAceptaciones, Casillas, guardarCasillas, tomarCasillas, type EstadoCasillas } from './Casillas';
 
 export const NOMBRE_ROL: Record<(typeof ROLES)[number], string> = { handler: 'Handler', cutter: 'Cutter', ambos: 'Ambos' };
 export const NOMBRE_MATCH: Record<(typeof CATEGORIAS_MATCH)[number], string> = {
@@ -135,7 +135,11 @@ const VACIO: Formulario = {
 
 function Registro() {
   const [f, setF] = useState<Formulario>(VACIO);
-  const [casillas, setCasillas] = useState<EstadoCasillas>(CASILLAS_VACIAS);
+  const [casillas, setCasillasEstado] = useState<EstadoCasillas>(tomarCasillas);
+  const setCasillas = (v: EstadoCasillas) => {
+    setCasillasEstado(v);
+    guardarCasillas(v);
+  };
   const [errores, setErrores] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
   const [ocupado, setOcupado] = useState(false);

@@ -1,4 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { hayServidor } from '../../nube/cliente';
+import { useSesion } from '../../nube/sesion';
+import { Casillas, guardarCasillas, tomarCasillas, type EstadoCasillas } from './Casillas';
 import {
   documento,
   NOMBRE_DOCUMENTO,
@@ -32,6 +35,42 @@ export function VentanaLegal({ tipo, alCerrar }: { tipo: TipoDocumento; alCerrar
     <Dialogo titulo={NOMBRE_DOCUMENTO[tipo]} alCerrar={alCerrar} grande>
       <TextoLegal tipo={tipo} />
     </Dialogo>
+  );
+}
+
+/**
+ * Al final de Términos y Privacidad: las casillas de aceptación y el botón para crear la cuenta.
+ * La aceptación queda registrada (fecha, hora, versión y hash) cuando se crea la cuenta, no aquí.
+ */
+function AceptarYCrear() {
+  const usuario = useSesion((s) => s.usuario);
+  const [casillas, setCasillas] = useState<EstadoCasillas>(tomarCasillas);
+  if (usuario) return null;
+  const ambas = casillas.terminos && casillas.privacidad;
+  const cambiar = (v: EstadoCasillas) => {
+    setCasillas(v);
+    guardarCasillas(v);
+  };
+  return (
+    <section className="aceptar-y-crear" aria-labelledby="titulo-aceptar">
+      <h2 id="titulo-aceptar">¿Estás de acuerdo?</h2>
+      {hayServidor ? (
+        <>
+          <p className="nota">Marca las dos casillas y crea tu cuenta. Guardamos la fecha, la hora y la versión que aceptaste.</p>
+          <Casillas valor={casillas} alCambiar={cambiar} prefijo="legal-" />
+          <button className="boton-texto primario grande" disabled={!ambas} onClick={() => irA('/cuenta/registro')}>
+            Crear mi cuenta
+          </button>
+          <p className="enlaces-cuenta">
+            <span>
+              ¿Ya tienes cuenta? <a href="#/cuenta">Ingresar</a>
+            </span>
+          </p>
+        </>
+      ) : (
+        <p className="nota">Las cuentas todavía no están activadas en esta versión. Puedes usar la app sin cuenta.</p>
+      )}
+    </section>
   );
 }
 
@@ -75,6 +114,7 @@ export function PantallaLegal({ tipo, version }: { tipo: string; version?: strin
           </label>
         )}
         <TextoLegal tipo={t} version={version} />
+        {(t === 'terminos' || t === 'privacidad') && <AceptarYCrear />}
       </main>
     </div>
   );

@@ -6,6 +6,14 @@ import { VentanaLegal } from './PantallaLegal';
 export type EstadoCasillas = Record<TipoAceptable, boolean>;
 export const CASILLAS_VACIAS: EstadoCasillas = { terminos: false, privacidad: false };
 
+// Casillas marcadas en la página legal (#/legal/…): el registro las recibe ya marcadas.
+// Solo en memoria: si se recarga la página, la persona vuelve a marcarlas.
+let precargadas: EstadoCasillas = CASILLAS_VACIAS;
+export const guardarCasillas = (v: EstadoCasillas) => {
+  precargadas = v;
+};
+export const tomarCasillas = (): EstadoCasillas => precargadas;
+
 /** Arma las aceptaciones con la versión vigente y el hash del texto exacto que se mostró. */
 export async function armarAceptaciones(): Promise<Aceptacion[]> {
   return Promise.all(
